@@ -27,26 +27,53 @@ const connectDB = async () => {
             return null;
         }
 
-        // Connection options for Render/Atlas
+        // Connection options specifically for Render + MongoDB Atlas
         const connectionOptions = {
-            serverSelectionTimeoutMS: 15000, // Increased timeout
+            serverSelectionTimeoutMS: 30000, // Increased timeout
             socketTimeoutMS: 45000,
             maxPoolSize: 10,
             retryWrites: true,
             w: 'majority',
-            // SSL/TLS options for Atlas
+            
+            // SSL/TLS options for MongoDB Atlas
             ssl: true,
+            tls: true,
             tlsAllowInvalidCertificates: false,
             tlsAllowInvalidHostnames: false,
-            // Better connection handling
-            bufferCommands: false,
-            // bufferMaxEntries: 0,
+            
+            // MongoDB driver options
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
+            
+            // Connection pool options
+            maxIdleTimeMS: 30000,
+            minPoolSize: 0,
+            
+            // Buffer commands to avoid timeouts during connection
+            bufferCommands: true,
+            bufferMaxEntries: -1,
+            bufferTimeoutMS: 5000
         };
 
         console.log('📡 Connecting to MongoDB...');
         console.log('🔒 URI:', uri.replace(/:[^:]*@/, ':****@')); // Hide password in logs
+
+        // Add event listeners before connecting
+        mongoose.connection.on('error', err => {
+            console.error('❌ MongoDB connection error:', err.message);
+        });
+
+        mongoose.connection.on('disconnected', () => {
+            console.log('🔌 MongoDB disconnected');
+        });
+
+        mongoose.connection.on('connected', () => {
+            console.log('✅ MongoDB connection established');
+        });
+
+        mongoose.connection.on('connecting', () => {
+            console.log('🔄 Connecting to MongoDB...');
+        });
 
         const conn = await mongoose.connect(uri, connectionOptions);
 
@@ -62,43 +89,21 @@ const connectDB = async () => {
         // Provide specific error messages for common issues
         if (error.name === 'MongoParseError') {
             console.log('💡 Check your MONGODB_URI format in environment variables');
-        } else if (error.name === 'MongoNetworkError') {
-            console.log('💡 Network error. Check:');
-            console.log('   - MongoDB Atlas IP whitelist (allow 0.0.0.0/0 temporarily)');
-            console.log('   - Internet connection');
-            console.log('   - Firewall settings');
-        } else if (error.name === 'MongoServerSelectionError') {
-            console.log('💡 MongoDB server is not available. Check:');
-            console.log('   - Is your Atlas cluster running?');
-            console.log('   - Is your IP whitelisted in Atlas?');
-            console.log('   - Are you using the correct connection string?');
-        } else if (error.message.includes('SSL')) {
-            console.log('💡 SSL/TLS connection issue. Check:');
-            console.log('   - MongoDB Atlas requires SSL connections');
-            console.log('   - Try adding ?ssl=true to your connection string');
+        } else if (error.name === 'MongoNetworkError' || error.name === 'MongoServerSelectionError') {
+            console.log('💡 Network/SSL issue. Possible solutions:');
+            console.log('   1. Check MongoDB Atlas IP whitelist (allow 0.0.0.0/0)');
+            console.log('   2. Try adding these parameters to your connection string:');
+            console.log('      &ssl=true&tlsAllowInvalidCertificates=true');
+            console.log('   3. Check if your MongoDB Atlas cluster is running');
+        } else if (error.message.includes('SSL') || error.message.includes('TLS')) {
+            console.log('💡 SSL/TLS connection issue. Try adding to your MONGODB_URI:');
+            console.log('   ?ssl=true&tlsAllowInvalidCertificates=true');
         }
         
         console.log('⚠️ Application will continue running without database connection');
         return null;
     }
 };
-
-// MongoDB connection event handlers
-mongoose.connection.on('error', err => {
-    console.error('❌ MongoDB connection error:', err.message);
-});
-
-mongoose.connection.on('disconnected', () => {
-    console.log('🔌 MongoDB disconnected');
-});
-
-mongoose.connection.on('connected', () => {
-    console.log('✅ MongoDB connection established');
-});
-
-mongoose.connection.on('connecting', () => {
-    console.log('🔄 Connecting to MongoDB...');
-});
 
 // Graceful shutdown handling
 process.on('SIGINT', async () => {
@@ -129,42 +134,3 @@ module.exports = {
     checkDBStatus,
     closeConnection
 };
-
-// const mongoose = require('mongoose');
-
-// const connectDB = async () => {
-//     try {
-//         console.log('🔗 Attempting MongoDB connection...');
-
-//         let uri = process.env.MONGODB_URI;
-
-//         // Remove SSL params that may cause issues
-//         uri = uri.replace(/&?ssl=(true|false)/gi, '');
-//         uri = uri.replace(/&?tlsAllowInvalidCertificates=(true|false)/gi, '');
-
-//         console.log('📡 Connecting with URI:', uri.replace(/:[^:]*@/, ':****@'));
-
-//         const conn = await mongoose.connect(uri, {
-//             serverSelectionTimeoutMS: 10000,
-//             socketTimeoutMS: 45000,
-//         });
-
-//         console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-//         console.log(`📊 Database: ${conn.connection.name}`);
-//     } catch (error) {
-//         console.error('❌ MongoDB connection error:', error.message);
-//         console.log('⚠️ Application will continue running without database');
-//     }
-// };
-
-// mongoose.connection.on('error', err => console.log('❌ MongoDB connection error:', err.message));
-// mongoose.connection.on('disconnected', () => console.log('🔌 MongoDB disconnected'));
-// mongoose.connection.on('connected', () => console.log('✅ MongoDB connected successfully'));
-
-// process.on('SIGINT', async () => {
-//     await mongoose.connection.close();
-//     console.log('MongoDB connection closed due to app termination');
-//     process.exit(0);
-// });
-
-// module.exports = connectDB;
