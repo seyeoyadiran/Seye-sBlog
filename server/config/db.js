@@ -40,7 +40,7 @@ const connectDB = async () => {
             tlsAllowInvalidHostnames: false,
             // Better connection handling
             bufferCommands: false,
-            bufferMaxEntries: 0,
+            // bufferMaxEntries: 0,
             useNewUrlParser: true,
             useUnifiedTopology: true
         };
