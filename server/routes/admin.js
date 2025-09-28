@@ -6,11 +6,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
+const SiteVisit = require('../models/Sitevisit');
+const fs = require('fs');
 
 const adminLayout = '../views/layouts/admin';
 const loginLayout = '../views/layouts/login';
-const jwtSecret = process.env.JWT_SECRET; 
-const SiteVisit = require('../models/Sitevisit');
+const jwtSecret = process.env.JWT_SECRET;
 
 
 // =======================
@@ -27,10 +28,9 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({
-    storage: storage,
-    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
+    storage,
+    limits: { fileSize: 50 * 1024 * 1024 },
     fileFilter: function (req, file, cb) {
-        // Allow all image and video files
         if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
             cb(null, true);
         } else {
@@ -51,6 +51,7 @@ const authMiddleware = (req, res, next) => {
         req.userId = decoded.userId;
         next();
     } catch {
+        res.clearCookie('token');
         return res.redirect('/admin');
     }
 };
@@ -58,34 +59,71 @@ const authMiddleware = (req, res, next) => {
 // =======================
 // Admin Login Page
 // =======================
-router.get('/admin', (req, res) => {
+router.get('/', (req, res) => {
     res.render('admin/index', {
-        locals: { title: 'Admin', description: 'Login Page' },
-        currentRoute: req.path,
+        locals: { title: 'Admin', description: 'Login/Register Page' },
+        currentRoute: '/admin',
         layout: loginLayout
     });
 });
 
 // =======================
+// Admin Registration Page
+// =======================
+router.get('/register', (req, res) => {
+    res.render('admin/register', {
+        locals: { title: 'Register', description: 'Register Admin' },
+        currentRoute: '/admin/register',
+        layout: loginLayout
+    });
+});
+
+// =======================
+// Admin Registration POST
+// =======================
+router.post('/register', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.redirect('/admin?status=error&message=Username already exists');
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await User.create({ username, password: hashedPassword });
+
+        return res.redirect('/admin?status=success&message=Registered successfully');
+    } catch (err) {
+        console.error('Registration error:', err);
+        return res.redirect('/admin?status=error&message=Registration failed');
+    }
+});
+
+// =======================
 // Admin Login POST
 // =======================
-router.post('/admin', async (req, res) => {
+router.post('/', async (req, res) => {
     const { username, password } = req.body;
 
     try {
         const user = await User.findOne({ username });
-        if (!user) return res.redirect('/admin');
+        if (!user) {
+            return res.redirect('/admin?status=error&message=User not found');
+        }
 
         const valid = await bcrypt.compare(password, user.password);
-        if (!valid) return res.redirect('/admin');
+        if (!valid) {
+            return res.redirect('/admin?status=error&message=Invalid password');
+        }
 
         const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: '1h' });
         res.cookie('token', token, { httpOnly: true });
 
-        return res.redirect('/dashboard');
+        return res.redirect('/admin/dashboard');
     } catch (err) {
-        console.error(err);
-        return res.redirect('/admin');
+        console.error('Login error:', err);
+        return res.redirect('/admin?status=error&message=Login failed');
     }
 });
 
@@ -94,66 +132,52 @@ router.post('/admin', async (req, res) => {
 // =======================
 router.get('/dashboard', authMiddleware, async (req, res) => {
     try {
-        const posts = await Post.find();
+        const posts = await Post.find().sort({ createdAt: -1 });
         res.render('admin/dashboard', {
             layout: adminLayout,
             locals: { title: 'Dashboard', description: 'Admin Dashboard' },
             data: posts,
-            currentRoute: req.path
+            currentRoute: '/admin/dashboard'
         });
     } catch (err) {
-        console.error(err);
+        console.error('Dashboard error:', err);
         res.redirect('/admin');
     }
 });
 
 // =======================
 // Add Post Page
-// =======================
 router.get('/add-post', authMiddleware, (req, res) => {
-    res.render('admin/add-post', {
-        layout: adminLayout,
+    res.render('admin/add-post', { 
+        layout: adminLayout,  // ← Change from false to adminLayout
         locals: { title: 'Add Post', description: 'Create a new post' },
-        currentRoute: req.path
+        currentRoute: '/admin/add-post'
     });
 });
 
 // =======================
-// Add Post POST (Updated with media removal handling)
+// Add Post POST
 // =======================
-router.post('/add-post', authMiddleware, upload.single('featuredMedia'), async (req, res) => {
+// Instead of upload.single('featuredMedia')
+router.post('/add-post', authMiddleware, upload.array('featuredMedia', 10), async (req, res) => {
     try {
-        let featuredImage = '';
-        let mediaType = null;
-
-        // Check if media was removed before submission
-        const mediaRemoved = req.body.mediaRemoved === 'true';
-        
-        // Only set media if a file was actually uploaded AND not removed
-        if (req.file && !mediaRemoved) {
-            featuredImage = '/uploads/' + req.file.filename;
-            
-            // Determine if it's an image or video
-            if (req.file.mimetype.startsWith('image/')) {
-                mediaType = 'image';
-            } else if (req.file.mimetype.startsWith('video/')) {
-                mediaType = 'video';
-            }
-        }
+        const mediaFiles = req.files.map(file => ({
+            url: '/uploads/' + file.filename,
+            type: file.mimetype.startsWith('image/') ? 'image' : 'video'
+        }));
 
         await Post.create({ 
-            title: req.body.title, 
+            title: req.body.title,
             body: req.body.body,
-            featuredImage: featuredImage,
-            mediaType: mediaType
+            media: mediaFiles
         });
-        res.redirect('/dashboard?status=success&message=Post created successfully');
+
+        res.redirect('/admin/dashboard?status=success&message=Post created successfully');
     } catch (err) {
         console.error(err);
-        res.redirect('/add-post?status=error&message=Error creating post');
+        res.redirect('/admin/add-post?status=error&message=Error creating post');
     }
 });
-
 
 // =======================
 // Edit Post Page
@@ -162,68 +186,80 @@ router.get('/edit-post/:id', authMiddleware, async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
         res.render('admin/edit-post', {
-            layout: adminLayout,
+            layout: adminLayout,  // ← Make sure this line is here
             locals: { title: 'Edit Post', description: 'Editing Post' },
             data: post,
-            currentRoute: req.path
+            currentRoute: '/admin/edit-post'
         });
     } catch (err) {
         console.error(err);
-        res.redirect('/dashboard');
+        res.redirect('/admin/dashboard');
     }
 });
 
 // =======================
 // Edit Post PUT
-// =======================
-
-// =======================
-// Edit Post PUT (Updated with media removal)
-// =======================
 router.put('/edit-post/:id', authMiddleware, upload.single('featuredMedia'), async (req, res) => {
     try {
-        const updateData = {
-            title: req.body.title,
-            body: req.body.body,
-            updatedAt: Date.now()
-        };
+        const post = await Post.findById(req.params.id);
+        if (!post) return res.redirect(`/admin/edit-post/${req.params.id}?status=error&message=Post not found`);
 
-        // Handle media removal
-        if (req.body.removeMedia === 'true') {
-            updateData.featuredImage = '';
-            updateData.mediaType = null;
-        } 
-        // Handle new file upload
-        else if (req.file) {
-            updateData.featuredImage = '/uploads/' + req.file.filename;
-            
-            if (req.file.mimetype.startsWith('image/')) {
-                updateData.mediaType = 'image';
-            } else if (req.file.mimetype.startsWith('video/')) {
-                updateData.mediaType = 'video';
-            }
+        // Remove current media if requested
+        if (req.body.removeMedia === 'true' && post.featuredImage) {
+            const oldPath = path.join(__dirname, '..', 'public', post.featuredImage);
+            fs.unlink(oldPath, err => { if (err) console.error(err); });
+            post.featuredImage = null;
+            post.mediaType = null;
         }
 
-        await Post.findByIdAndUpdate(req.params.id, updateData);
-        res.redirect(`/edit-post/${req.params.id}?status=success&message=Post updated successfully`);
+        // Add new uploaded file
+        if (req.file) {
+            // Delete old media if exists
+            if (post.featuredImage) {
+                const oldPath = path.join(__dirname, '..', 'public', post.featuredImage);
+                fs.unlink(oldPath, err => { if (err) console.error(err); });
+            }
+            post.featuredImage = '/uploads/' + req.file.filename;
+            post.mediaType = req.file.mimetype.startsWith('image/') ? 'image' : 'video';
+        }
+
+        // Update text fields
+        post.title = req.body.title;
+        post.body = req.body.body;
+        post.updatedAt = Date.now();
+
+        await post.save();
+        res.redirect(`/admin/edit-post/${req.params.id}?status=success&message=Post updated successfully`);
     } catch (err) {
         console.error(err);
-        res.redirect(`/edit-post/${req.params.id}?status=error&message=Error updating post`);
+        res.redirect(`/admin/edit-post/${req.params.id}?status=error&message=Error updating post`);
     }
 });
 
-// =======================
-// Delete Post
-// =======================
+
+
+
 router.delete('/delete-post/:id', authMiddleware, async (req, res) => {
     try {
+        const post = await Post.findById(req.params.id);
+        if (!post) return res.redirect('/admin/dashboard?status=error&message=Post not found');
+
+        // Delete associated media if exists
+        if (post.featuredImage) {
+            const mediaPath = path.join(__dirname, '..', 'public', post.featuredImage);
+            fs.unlink(mediaPath, (err) => {
+                if (err) console.error('Failed to delete media:', err);
+            });
+        }
+
         await Post.findByIdAndDelete(req.params.id);
-        res.redirect('/dashboard');
+        res.redirect('/admin/dashboard?status=success&message=Post deleted successfully');
     } catch (err) {
         console.error(err);
-        res.redirect('/dashboard');
+        res.redirect('/admin/dashboard?status=error&message=Error deleting post');
     }
 });
+
 
 // =======================
 // Real-time Analytics API
@@ -233,7 +269,7 @@ router.get("/api/analytics", authMiddleware, async (req, res) => {
         const posts = await Post.find({});
         const totalViews = posts.reduce((sum, p) => sum + (p.views || 0), 0);
 
-        // Get last 7 days of site visits
+        // last 7 days
         const last7Days = [];
         for (let i = 6; i >= 0; i--) {
             const date = new Date();
@@ -241,24 +277,22 @@ router.get("/api/analytics", authMiddleware, async (req, res) => {
             last7Days.push(date.toISOString().split('T')[0]);
         }
 
-        // Get site visits for the last 7 days
         const siteVisitsData = await SiteVisit.find({
             date: { $in: last7Days }
         });
 
-        // Create a map for easy lookup
         const visitsMap = {};
         siteVisitsData.forEach(visit => {
             visitsMap[visit.date] = visit.count;
         });
 
-        // Fill in missing days with 0
         const visitsByDay = last7Days.map(date => ({
             _id: date,
             count: visitsMap[date] || 0
         }));
 
-        // Calculate total site visits (last 30 days for better overview)
+        visitsByDay.sort((a, b) => new Date(a._id) - new Date(b._id));
+
         const last30Days = new Date();
         last30Days.setDate(last30Days.getDate() - 30);
         const totalSiteVisits = await SiteVisit.aggregate([
@@ -268,7 +302,6 @@ router.get("/api/analytics", authMiddleware, async (req, res) => {
 
         const siteVisits = totalSiteVisits.length > 0 ? totalSiteVisits[0].total : 0;
 
-        // Get today's visits for real-time display
         const today = new Date().toISOString().split('T')[0];
         const todayVisit = await SiteVisit.findOne({ date: today });
         const todayVisits = todayVisit ? todayVisit.count : 0;
@@ -303,8 +336,6 @@ router.get("/api/top-posts", authMiddleware, async (req, res) => {
     }
 });
 
-
-
 // =======================
 // Logout
 // =======================
@@ -322,7 +353,6 @@ router.use((error, req, res, next) => {
             return res.status(400).send('File too large. Maximum size is 50MB.');
         }
     } else if (error) {
-        // This catches our custom file filter errors
         return res.status(400).send(error.message);
     }
     next();

@@ -3,59 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Post - Admin Dashboard</title>
+    <title>Create New Post - Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
-        :root {
-            --primary: #646cff;
-            --primary-dark: #5656ee;
-            --secondary: #ff6b81;
-            --text: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --success: #48bb78;
-            --background: #1c1c1c;
-            --yellow: yellow;
-            --container-bg: #2d2d2d;
         }
 
         body {
-            background: #2C2C54;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            color: var(--yellow);
+            
         }
 
         .admin-container {
-            width: 100%;
-            max-width: 800px;
-            background: #2d2d2d;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(23, 25, 35, 0.9);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .admin-header {
-            padding: 30px;
-            text-align: center;
-            border-bottom: 1px solid #444;
-            background: #333;
+            padding: 30px 40px 20px;
+            background: rgba(30, 33, 48, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .admin-title {
             font-size: 2.2rem;
             font-weight: 700;
-            color: var(--yellow);
+            background: linear-gradient(90deg, #8e44ad, #9b59b6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: #FFD700;
             margin-bottom: 8px;
+            
         }
 
         .admin-subtitle {
@@ -65,57 +57,293 @@
         }
 
         .admin-content {
-            padding: 40px;
+            padding: 30px 40px 40px;
+        }
+
+        .status-message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .status-success {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid rgba(46, 204, 113, 0.4);
+            color: #2ecc71;
+        }
+
+        .status-error {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid rgba(231, 76, 60, 0.4);
+            color: #e74c3c;
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .form-label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: var(--yellow);
-            font-size: 1.1rem;
             display: flex;
             align-items: center;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #fff;
+            font-size: 1rem;
         }
 
         .form-label i {
             margin-right: 10px;
-            color: var(--yellow);
-            font-size: 1.1rem;
+            color: #9b59b6;
+            width: 20px;
+            text-align: center;
         }
 
         .form-input, .form-textarea, .form-file {
             width: 100%;
-            padding: 14px 16px;
-            background: #3a3a3a;
-            border: 1px solid #555;
-            border-radius: 6px;
-            color: white;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
             font-size: 1rem;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
         }
 
         .form-input:focus, .form-textarea:focus {
+            border-color: #8e44ad;
             outline: none;
-            border-color: var(--yellow);
-            background: #444;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.2);
         }
 
         .form-textarea {
+            min-height: 200px;
             resize: vertical;
-            min-height: 180px;
+            line-height: 1.6;
         }
 
         .form-file {
-            padding: 12px 16px;
+            padding: 12px;
             cursor: pointer;
-            position: relative;
         }
 
+        .file-info {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .selected-media {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .selected-media p {
+            margin-bottom: 15px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        #mediaElementContainer {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        #mediaElementContainer img, #mediaElementContainer video {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .file-name {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .media-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .remove-media-btn, .btn-warning {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remove-media-btn {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .remove-media-btn:hover {
+            background: rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-warning {
+            background: rgba(241, 196, 15, 0.2);
+            color: #f1c40f;
+            border: 1px solid rgba(241, 196, 15, 0.3);
+        }
+
+        .btn-warning:hover {
+            background: rgba(241, 196, 15, 0.3);
+        }
+
+        .media-removed-message {
+            padding: 10px 14px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 6px;
+            margin-top: 10px;
+            color: #e74c3c;
+            font-size: 0.9rem;
+            border-left: 3px solid #e74c3c;
+        }
+
+        .no-media-message {
+            padding: 15px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 35px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+            color: white;
+            box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(142, 68, 173, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            margin-top: 25px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #9b59b6;
+        }
+
+        .character-count {
+            text-align: right;
+            margin-top: 5px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .admin-container {
+                border-radius: 12px;
+            }
+
+            .admin-header, .admin-content {
+                padding: 25px 20px;
+            }
+
+            .admin-title {
+                font-size: 1.8rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .media-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Loading animation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Custom file input styling */
         .form-file::-webkit-file-upload-button {
             visibility: hidden;
         }
@@ -123,226 +351,39 @@
         .form-file::before {
             content: 'Choose File';
             display: inline-block;
-            background: var(--yellow);
-            color: #1c1c1c;
-            padding: 6px 12px;
-            border-radius: 4px;
-            margin-right: 12px;
-            font-weight: 600;
-            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 8px 16px;
+            outline: none;
+            white-space: nowrap;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
         }
 
         .form-file:hover::before {
-            background: #e6e600;
+            background: rgba(255, 255, 255, 0.15);
         }
 
-        .file-info {
-            display: inline-block;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.85rem;
+        .form-file:active::before {
+            background: rgba(255, 255, 255, 0.2);
         }
-
-        .form-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 30px;
-        }
-
-        .btn {
-            padding: 14px 24px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            background: var(--yellow);
-            color: #1c1c1c;
-            flex: 2;
-        }
-
-        .btn-primary:hover {
-            background: #e6e600;
-        }
-
-        .btn-secondary {
-            background: #444;
-            color: var(--yellow);
-            border: 1px solid #555;
-            flex: 1;
-        }
-
-        .btn-secondary:hover {
-            background: #555;
-        }
-        
-        .btn-warning {
-            background: #ffa502;
-            color: #1c1c1c;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            transition: all 0.2s ease;
-        }
-
-        .btn-warning:hover {
-            background: #e59400;
-        }
-
-        .btn i {
-            margin-right: 8px;
-        }
-
-        @media (max-width: 768px) {
-            .admin-content {
-                padding: 25px;
-            }
-            
-            .admin-title {
-                font-size: 1.8rem;
-            }
-            
-            .form-actions {
-                flex-direction: column;
-            }
-            
-            .media-actions {
-                flex-direction: column;
-            }
-        }
-
-        /* Selected media styling */
-        .selected-media {
-            margin-bottom: 15px;
-            padding: 15px;
-            background: #3a3a3a;
-            border-radius: 6px;
-            border: 1px solid #555;
-            position: relative;
-        }
-
-        .selected-media p {
-            font-weight: 600;
-            color: var(--yellow);
-            margin-bottom: 10px;
-        }
-
-        .selected-media img, .selected-media video {
-            max-width: 100%;
-            border-radius: 4px;
-            display: block;
-        }
-
-        .media-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .remove-media-btn {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            transition: all 0.2s ease;
-        }
-
-        .remove-media-btn:hover {
-            background: #ff3742;
-        }
-
-        .remove-media-btn i {
-            margin-right: 5px;
-        }
-
-        /* Media removed state */
-        .media-removed {
-            opacity: 0.5;
-            border: 2px dashed #ff4757;
-        }
-        
-        .media-removed-message {
-            color: #ff4757;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-        
-        .no-media-message {
-            color: rgba(255, 255, 255, 0.5);
-            font-style: italic;
-            margin-top: 10px;
-        }
-
-        /* Back link styling */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            margin-top: 20px;
-            color: var(--yellow);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .back-link:hover {
-            color: #e6e600;
-        }
-        
-        .back-link i {
-            margin-right: 8px;
-        }
-        
-        /* Status message */
-        .status-message {
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            display: none;
-            text-align: center;
-            font-weight: 500;
-        }
-        
-        .status-success {
-            background: rgba(72, 187, 120, 0.2);
-            color: #48bb78;
-            border: 1px solid rgba(72, 187, 120, 0.3);
-        }
-        
-        .status-error {
-            background: rgba(255, 107, 129, 0.2);
-            color: #ff6b81;
-            border: 1px solid rgba(255, 107, 129, 0.3);
-        }
-
-
     </style>
 </head>
 <body>
     <div class="admin-container">
         <div class="admin-header">
             <h1 class="admin-title">Create New Post</h1>
-            <p class="admin-subtitle">Add engaging content to your blog</p>
+            <p class="admin-subtitle">Craft engaging content for your audience</p>
         </div>
         
         <div class="admin-content">
             <div class="status-message" id="statusMessage"></div>
             
-            <form method="POST" action="/add-post" enctype="multipart/form-data" id="postForm">
+            <form method="POST" action="/admin/add-post" enctype="multipart/form-data" id="postForm">
                 <!-- Hidden field to track media removal -->
                 <input type="hidden" id="mediaRemoved" name="mediaRemoved" value="false">
                 
@@ -350,7 +391,8 @@
                     <label for="title" class="form-label">
                         <i class="fas fa-heading"></i> Post Title
                     </label>
-                    <input type="text" id="title" name="title" class="form-input" placeholder="Enter a compelling title..." required>
+                    <input type="text" id="title" name="title" class="form-input" placeholder="Enter a compelling title..." required maxlength="120">
+                    <div class="character-count"><span id="titleCount">0</span>/120 characters</div>
                 </div>
                 
                 <div class="form-group">
@@ -372,17 +414,17 @@
                             </button>
                         </div>
                         <div id="mediaRemovedMessage" class="media-removed-message" style="display: none;">
-                            Media will not be included with this post
+                            <i class="fas fa-exclamation-circle"></i> Media will not be included with this post
                         </div>
                     </div>
                     
                     <div id="noMediaMessage" class="no-media-message">
-                        No media selected
+                        <i class="fas fa-cloud-upload-alt"></i> No media selected
                     </div>
                     
                     <div style="margin-top: 15px;">
                         <input type="file" id="featuredMedia" name="featuredMedia" class="form-file" accept="image/*,video/*">
-                        <span class="file-info">Supported: JPEG, PNG, GIF, MP4, MOV, AVI, WebM (Max 50MB)</span>
+                        <span class="file-info">Supported formats: JPEG, PNG, GIF, MP4, MOV, AVI, WebM (Max 50MB)</span>
                     </div>
                 </div>
                 
@@ -391,25 +433,43 @@
                         <i class="fas fa-align-left"></i> Content
                     </label>
                     <textarea id="body" name="body" class="form-textarea" placeholder="Write your post content here..." required></textarea>
+                    <div class="character-count"><span id="bodyCount">0</span> characters</div>
                 </div>
                 
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-plus-circle"></i> Create Post
-                    </button>
-                    <a href="/dashboard" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> Cancel
-                    </a>
+                    <div>
+                        <a href="/admin/dashboard" class="back-link">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <a href="/admin/dashboard" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus-circle"></i> Create Post
+                        </button>
+                    </div>
                 </div>
             </form>
-            
-            <a href="/dashboard" class="back-link">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </a>
         </div>
     </div>
 
     <script>
+        // Character counters
+        const titleInput = document.getElementById('title');
+        const bodyTextarea = document.getElementById('body');
+        const titleCount = document.getElementById('titleCount');
+        const bodyCount = document.getElementById('bodyCount');
+
+        titleInput.addEventListener('input', function() {
+            titleCount.textContent = this.value.length;
+        });
+
+        bodyTextarea.addEventListener('input', function() {
+            bodyCount.textContent = this.value.length;
+        });
+
         // File selection functionality
         document.getElementById('featuredMedia').addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -419,6 +479,14 @@
             const mediaRemovedInput = document.getElementById('mediaRemoved');
             
             if (file) {
+                // Validate file size (max 50MB)
+                const maxSize = 50 * 1024 * 1024; // 50MB in bytes
+                if (file.size > maxSize) {
+                    alert('File size exceeds 50MB limit. Please choose a smaller file.');
+                    this.value = '';
+                    return;
+                }
+                
                 // Hide "no media" message and show selected media section
                 noMediaMessage.style.display = 'none';
                 selectedMedia.style.display = 'block';
@@ -433,27 +501,23 @@
                     const img = document.createElement('img');
                     img.src = URL.createObjectURL(file);
                     img.alt = 'Selected image';
-                    img.style.maxWidth = '100%';
-                    img.style.maxHeight = '300px';
                     mediaElementContainer.appendChild(img);
                 } else if (file.type.startsWith('video/')) {
                     const video = document.createElement('video');
                     video.src = URL.createObjectURL(file);
                     video.controls = true;
                     video.style.maxWidth = '100%';
-                    video.style.maxHeight = '300px';
                     mediaElementContainer.appendChild(video);
                 }
                 
                 // Show file name
                 const fileName = document.createElement('div');
                 fileName.className = 'file-name';
-                fileName.textContent = `File: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-                fileName.style.marginTop = '10px';
+                fileName.innerHTML = `<i class="fas fa-file"></i> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
                 mediaElementContainer.appendChild(fileName);
                 
                 // Reset removal state
-                document.getElementById('removeMediaBtn').style.display = 'block';
+                document.getElementById('removeMediaBtn').style.display = 'flex';
                 document.getElementById('restoreMediaBtn').style.display = 'none';
                 document.getElementById('mediaRemovedMessage').style.display = 'none';
             } else {
@@ -476,7 +540,7 @@
             selectedMedia.classList.add('media-removed');
             mediaRemovedInput.value = 'true';
             removeMediaBtn.style.display = 'none';
-            restoreMediaBtn.style.display = 'block';
+            restoreMediaBtn.style.display = 'flex';
             mediaRemovedMessage.style.display = 'block';
         });
         
@@ -491,13 +555,15 @@
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner"></i> Creating...';
             submitBtn.disabled = true;
             
             // Re-enable after 5 seconds if still on page (form submission failed)
             setTimeout(() => {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+                if (submitBtn.disabled) {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
             }, 5000);
         });
         
@@ -515,7 +581,18 @@
                 
                 // Remove parameters from URL without reloading
                 window.history.replaceState({}, document.title, window.location.pathname);
+                
+                // Auto-hide success messages after 5 seconds
+                if (status === 'success') {
+                    setTimeout(() => {
+                        statusElement.style.display = 'none';
+                    }, 5000);
+                }
             }
+            
+            // Initialize character counts
+            titleCount.textContent = titleInput.value.length;
+            bodyCount.textContent = bodyTextarea.value.length;
         });
     </script>
 </body>

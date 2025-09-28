@@ -2,214 +2,287 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><%= data.title %> - Oluwaseye Oyadiran</title>
+    <title>Oluwaseye Oyadiran - Tech Professional & Entrepreneur</title>
     <link rel="stylesheet" href="/css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Post Container */
-        .post-container {
-            max-width: 800px;
-            margin: 40px auto;
-            background-color: #1c1c1c;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            color: #f8f8f8;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* Hero Section */
+        .hero-container {
             position: relative;
+            text-align: center;
+            margin-bottom: 60px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 25px;
         }
 
-        /* Decorative top accent */
-        .post-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, yellow, #ffd700, yellow);
-            border-radius: 12px 12px 0 0;
-        }
-
-        /* Featured Media */
-        .post-featured-media {
+        .hero-image {
             width: 100%;
-            border-radius: 8px;
-            margin-bottom: 30px;
+            height: auto;
+            display: block;
             object-fit: cover;
-            max-height: 400px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-            transition: transform 0.3s ease;
+            transition: transform 0.5s ease;
         }
 
-        .post-featured-media:hover {
-            transform: scale(1.01);
-        }
-
-        .featured-video {
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0;
             width: 100%;
-            height: 400px;
-            border-radius: 8px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+            height: 100%;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(12px) saturate(150%);
+            -webkit-backdrop-filter: blur(12px) saturate(150%);
+            z-index: 1;
+            transition: all 0.5s ease;
         }
 
-        /* Title */
-        .post-title {
-            font-size: 2.5rem;
+        .hero-text-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #FFD700;
+            z-index: 2;
+            text-align: center;
+            max-width: 90%;
+            transition: all 0.5s ease;
+        }
+
+        .hero-text-overlay h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 700;
             margin-bottom: 15px;
-            line-height: 1.2;
-            color: yellow;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.6);
         }
 
-        /* Meta info */
-        .post-meta {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 0.95rem;
-            color: #bbb;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #333;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .meta-item::before {
-            content: '•';
-            margin-right: 5px;
-            color: yellow;
-        }
-
-        .meta-item:first-child::before {
-            display: none;
-        }
-
-        /* Article text */
-        s
-        .article {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            white-space: pre-wrap;
-            text-indent: 0; /* Fix for the indentation issue */
-        }
-
-        .article p:first-child {
-            font-size: 1.15rem;
-            color: #f0f0f0;
+        .hero-text-overlay p {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
             font-weight: 500;
-            margin-bottom: 25px;
+            color: #FFF8DC;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.5);
         }
 
-        /* Back button */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            margin-top: 40px;
-            padding: 12px 24px;
-            background-color: rgba(255, 255, 0, 0.1);
-            color: yellow;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 0, 0.2);
+        /* Hover effect: remove overlay completely */
+        .hero-container:hover .hero-overlay {
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
         }
 
-        .back-link:hover {
-            background-color: yellow;
-            color: #1c1c1c;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 255, 0, 0.2);
+        .hero-container:hover .hero-image {
+            transform: scale(1.05);
         }
 
-        /* Social sharing */
-        .post-actions {
+        .hero-container:hover .hero-text-overlay h1,
+        .hero-container:hover .hero-text-overlay p {
+            text-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        /* Article cards */
+        .article-ul li {
+            background-color: #1c1c1c;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .article-ul li:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .article-ul li a {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #333;
+                        font-weight: 500;
         }
 
-     
+        .article-list-date {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }    
+
+        /* Sort Dropdown */
+        .sort-container {
+            display: inline-flex; /* shrink to content */
+            align-items: center;
+            border-radius: 12px;
+            padding: 4px 8px;
+            gap: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+
+    .sort-container label {
+        font-weight: 500;
+    }
+
+    .sort-select {
+        padding: 3px 8px;
+        border-radius: 8px;
+        border: none;
+        background-color: rgba(0,0,0,0.7);
+        color: #FFF8DC;
+        font-weight: 500;
+        cursor: pointer;
+        min-width: 100px;
+        transition: all 0.3s ease;
+    }
+
+    sortSelect {
+        margin-right: 20px;
+    }
+
+    .sort-select:hover, .sort-select:focus {
+        background-color: rgba(0,0,0,0.85);
+        outline: none;
+    }
+
+        /* Pagination */
+        .pagination {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 18px;
+            background: var(--black);
+            color: yellow;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .pagination:hover {
+            background: var(--gray-light);
+            color: var(--black);
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .post-container {
-                padding: 25px 20px;
-                margin: 20px auto;
+            .hero-text-overlay h1 {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
             }
-
-            .post-title {
-                font-size: 2rem;
+            .hero-text-overlay p {
+                font-size: clamp(1rem, 3vw, 1.2rem);
             }
-
-            .featured-video {
-                height: 250px;
-            }
-
-            .post-meta {
+            .article-ul li {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
             }
-
-            .meta-item::before {
-                display: none;
+            .sort-container {
+                justify-content: center;
             }
-
-            .post-actions {
-                flex-direction: column;
-                gap: 20px;
-                align-items: flex-start;
-            }
-            
         }
     </style>
 </head>
 <body>
 
-    <div class="post-container container">
+    <!-- Hero Section -->
+    <div class="hero-container">
+        <img src="/img/Cinc.jpg" alt="Oluwaseye Oyadiran" class="hero-image">
 
-        <% if (data.featuredImage) { %>
-            <% if (data.mediaType === 'image') { %>
-                <img src="<%= data.featuredImage %>" alt="<%= data.title %>" class="post-featured-media">
-            <% } else if (data.mediaType === 'video') { %>
-                <video controls class="featured-video">
-                    <source src="<%= data.featuredImage %>" type="video/mp4">
-                    <source src="<%= data.featuredImage %>" type="video/webm">
-                    Your browser does not support the video tag.
-                </video>
-            <% } else { %>
-                <!-- Fallback for existing posts without mediaType -->
-                <img src="<%= data.featuredImage %>" alt="<%= data.title %>" class="post-featured-media">
-            <% } %>
-        <% } %>
+        <!-- Liquid-glass overlay -->
+        <div class="hero-overlay"></div>
 
-        <h1 class="post-title"><%= data.title %></h1>
-
-        <div class="post-meta">
-            <div class="meta-item">Posted on <%= data.createdAt.toDateString() %></div>
-            <div class="meta-item">by Oluwaseye Oyadiran</div>
-            <div class="meta-item">3 min read</div>
+        <!-- Text Overlay -->
+        <div class="hero-text-overlay">
+            <h1>Hi, I am Oluwaseye Oyadiran</h1>
+            <p>Tech Professional & Entrepreneur</p>
         </div>
-
-        <article class="article">
-            <%= data.body %>
-        </article>
-
-        <div class="post-actions">
-            <a href="/" class="back-link">&larr; Back to Posts</a>
-       
-        </div>
-
     </div>
+
+    <!-- Articles Section -->
+    <section class="articles container">
+        <h2 class="article__heading">Latest Posts</h2>
+
+        <!-- Sort Dropdown -->
+        <div class="sort-container">
+            <label for="sortSelect">Sort by:</label>
+            <select id="sortSelect" class="sort-select" onchange="sortPosts()">
+                <option value="newest" selected>Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="popular">Most Popular</option>
+            </select>
+            
+        </div>
+
+        <ul id="articlesList" class="article-ul">
+            <% if (data && data.length > 0) { %>
+                <% data.forEach(post => { %>
+                    <li data-created="<%= post.createdAt %>" data-views="<%= post.views %>">
+                        <a href="/post/<%= post._id %>">
+                            <span><%= post.title %></span>
+                            <span class="article-list-date"><%= post.createdAt.toDateString() %></span>
+                        </a>
+                    </li>
+                <% }) %>
+            <% } else { %>
+                <li>No posts found.</li>
+            <% } %>
+        </ul>
+
+        <% if (nextPage !== null) { %>
+            <a href="/?page=<%= nextPage %>" class="pagination">&lt; View Other Posts</a>
+        <% } %>
+    </section>
+
+    <script>
+        function sortPosts() {
+            const sortType = document.getElementById('sortSelect').value;
+            const list = document.getElementById('articlesList');
+            const items = Array.from(list.children);
+
+            items.sort((a, b) => {
+                if(sortType === 'newest') {
+                    return new Date(b.dataset.created) - new Date(a.dataset.created);
+                } else if(sortType === 'oldest') {
+                    return new Date(a.dataset.created) - new Date(b.dataset.created);
+                } else if(sortType === 'popular') {
+                    return b.dataset.views - a.dataset.views;
+                }
+            });
+
+            // Remove old items
+            while(list.firstChild) {
+                list.removeChild(list.firstChild);
+            }
+
+            // Append sorted items
+            items.forEach(item => list.appendChild(item));
+        }
+    </script>
 
 </body>
 </html>
+
+
+//index.ejs
+<!-- <form id="loginForm" method="POST" action="/admin">
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <button type="submit">Login</button>
+</form>
+
+
+<h3>Register Form </h3>
+<form action="/register" method="POST">
+    
+    <label for="username"><b>Username</b></label>
+    <input type="text" placeholder="Enter Username" name="username">
+
+    <label for="password"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="password">
+
+    <input type="submit" value="Register" class="btn"> 
+
+</form> 
+
+ -->

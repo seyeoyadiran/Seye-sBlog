@@ -1,61 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Post - Admin Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Post - Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        :root {
-            --primary: #646cff;
-            --primary-dark: #5656ee;
-            --secondary: #ff6b81;
-            --text: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --success: #48bb78;
-            --background: #2C2C54;
-            --yellow: yellow;
-            --container-bg: #40407a;
-        }
-
-        body {
-            background: #2C2C54; /* Solid background color */
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            color: var(--yellow);
-        }
-
-        .admin-container {
-            width: 100%;
-            max-width: 800px;
-            background: #40407a; /* Solid container background */
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      
+    }
+    .admin-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(23, 25, 35, 0.9);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .admin-header {
-            padding: 30px;
-            text-align: center;
-            border-bottom: 1px solid #5a5a9a;
-            background: #353565;
+            padding: 30px 40px 20px;
+            background: rgba(30, 33, 48, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .admin-title {
             font-size: 2.2rem;
             font-weight: 700;
-            color: var(--yellow);
+            background: linear-gradient(90deg, #8e44ad, #9b59b6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: #FFD700;
             margin-bottom: 8px;
+            
         }
 
         .admin-subtitle {
@@ -64,303 +55,354 @@
             font-weight: 400;
         }
 
-        .admin-content {
-            padding: 40px;
-        }
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
 
-        .form-group {
-            margin-bottom: 25px;
-        }
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #FFD700;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+    }
 
-        .form-label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: var(--yellow);
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-        }
+    .page-subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.1rem;
+    }
 
-        .form-label i {
-            margin-right: 10px;
-            color: var(--yellow);
-            font-size: 1.1rem;
-        }
+    .admin-content {
+      background: rgba(23, 25, 35, 0.7);
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-        .form-input, .form-textarea, .form-file {
-            width: 100%;
-            padding: 14px 16px;
-            background: #4a4a8a;
-            border: 1px solid #6a6aaa;
-            border-radius: 6px;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-        }
+    .status-message {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      font-weight: 500;
+      display: none;
+    }
 
-        .form-input:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--yellow);
-            background: #5555a0;
-        }
+    .status-success {
+      background: rgba(46, 204, 113, 0.2);
+      border: 1px solid rgba(46, 204, 113, 0.4);
+      color: #2ecc71;
+    }
 
-        .form-textarea {
-            resize: vertical;
-            min-height: 180px;
-        }
+    .status-error {
+      background: rgba(231, 76, 60, 0.2);
+      border: 1px solid rgba(231, 76, 60, 0.4);
+      color: #e74c3c;
+    }
 
-        .form-file {
-            padding: 12px 16px;
-            cursor: pointer;
-            position: relative;
-        }
+    .form-group {
+      margin-bottom: 2rem;
+    }
 
-        .form-file::-webkit-file-upload-button {
-            visibility: hidden;
-        }
+    .form-label {
+      display: block;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      color: #FFD700;
+      font-size: 1.1rem;
+    }
 
-        .form-file::before {
-            content: 'Choose New File';
-            display: inline-block;
-            background: var(--yellow);
-            color: #2C2C54;
-            padding: 6px 12px;
-            border-radius: 4px;
-            margin-right: 12px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
+    .form-input, .form-textarea, .form-file {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+    }
 
-        .form-file:hover::before {
-            background: #e6e600;
-        }
+    .form-input:focus, .form-textarea:focus {
+      border-color: #FFD700;
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+    }
 
-        .file-info {
-            display: inline-block;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.85rem;
-        }
+    .form-textarea {
+      min-height: 200px;
+      resize: vertical;
+      line-height: 1.6;
+    }
 
-        .form-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 30px;
-        }
+    .form-file {
+      padding: 12px;
+      cursor: pointer;
+    }
 
-        .btn {
-            padding: 14px 24px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .file-info {
+      display: block;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
 
-        .btn-primary {
-            background: var(--yellow);
-            color: #2C2C54;
-            flex: 2;
-        }
+    .current-media {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
 
-        .btn-primary:hover {
-            background: #e6e600;
-        }
+    .current-media.media-removed {
+      opacity: 0.5;
+      border-color: rgba(231, 76, 60, 0.3);
+    }
 
-        .btn-secondary {
-            background: #5555a0;
-            color: var(--yellow);
-            border: 1px solid #6a6aaa;
-            flex: 1;
-        }
+    .current-media p {
+      margin-bottom: 15px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.8);
+    }
 
-        .btn-secondary:hover {
-            background: #6666b0;
-        }
-        
-        .btn-danger {
-            background: #ff4757;
-            color: white;
-            flex: 1;
-        }
+    .current-media img, .current-media video {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
 
-        .btn-danger:hover {
-            background: #ff3742;
-        }
-        
-        .btn-warning {
-            background: #ffa502;
-            color: #2C2C54;
-        }
+    .media-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
 
-        .btn-warning:hover {
-            background: #e59400;
-        }
+    .remove-media-btn, .btn-warning {
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .btn i {
-            margin-right: 8px;
-        }
+    .remove-media-btn {
+      background: rgba(231, 76, 60, 0.2);
+      color: #e74c3c;
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
 
-        @media (max-width: 768px) {
-            .admin-content {
-                padding: 25px;
-            }
-            
-            .admin-title {
-                font-size: 1.8rem;
-            }
-            
-            .form-actions {
-                flex-direction: column;
-            }
-            
-            .media-actions {
-                flex-direction: column;
-            }
-        }
+    .remove-media-btn:hover {
+      background: rgba(231, 76, 60, 0.3);
+    }
 
-        /* Current media styling */
-        .current-media {
-            margin-bottom: 15px;
-            padding: 15px;
-            background: #4a4a8a;
-            border-radius: 6px;
-            border: 1px solid #6a6aaa;
-            position: relative;
-        }
+    .btn-warning {
+      background: rgba(241, 196, 15, 0.2);
+      color: #f1c40f;
+      border: 1px solid rgba(241, 196, 15, 0.3);
+    }
 
-        .current-media p {
-            font-weight: 600;
-            color: var(--yellow);
-            margin-bottom: 10px;
-        }
+    .btn-warning:hover {
+      background: rgba(241, 196, 15, 0.3);
+    }
 
-        .current-media img, .current-media video {
-            max-width: 100%;
-            border-radius: 4px;
-            display: block;
-        }
+    .media-removed-message {
+      padding: 10px 14px;
+      background: rgba(231, 76, 60, 0.1);
+      border-radius: 6px;
+      margin-top: 10px;
+      color: #e74c3c;
+      font-size: 0.9rem;
+      border-left: 3px solid #e74c3c;
+    }
 
-        .media-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-        .remove-media-btn {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            transition: all 0.2s ease;
-        }
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      text-decoration: none;
+    }
 
-        .remove-media-btn:hover {
-            background: #ff3742;
-        }
+    .btn-primary {
+      background: linear-gradient(135deg, #FFD700, #FFC000);
+      color: #1c1c1c;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
 
-        .remove-media-btn i {
-            margin-right: 5px;
-        }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    }
 
-        /* File preview styling */
-        .file-preview {
-            margin-top: 12px;
-            display: none;
-            padding: 12px;
-            background: #4a4a8a;
-            border-radius: 6px;
-            border: 1px dashed #6a6aaa;
-        }
+    .btn-primary:active {
+      transform: translateY(0);
+    }
 
-        .file-preview.active {
-            display: block;
-        }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-        .file-preview img, .file-preview video {
-            max-width: 100%;
-            border-radius: 4px;
-            margin-bottom: 8px;
-        }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
 
-        .file-preview .file-name {
-            font-weight: 600;
-            color: var(--yellow);
-        }
-        
-        /* Back link styling */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            margin-top: 20px;
-            color: var(--yellow);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .back-link:hover {
-            color: #e6e600;
-        }
-        
-        .back-link i {
-            margin-right: 8px;
-        }
-        
-        /* Status message */
-        .status-message {
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            display: none;
-            text-align: center;
-            font-weight: 500;
-        }
-        
-        .status-success {
-            background: rgba(72, 187, 120, 0.2);
-            color: #48bb78;
-            border: 1px solid rgba(72, 187, 120, 0.3);
-        }
-        
-        .status-error {
-            background: rgba(255, 107, 129, 0.2);
-            color: #ff6b81;
-            border: 1px solid rgba(255, 107, 129, 0.3);
-        }
-        
-        .delete-form {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #5a5a9a;
-        }
-        
-        /* Hidden input for media removal */
-        .hidden-input {
-            display: none;
-        }
-        
-        /* Media removed state */
-        .media-removed {
-            opacity: 0.5;
-            border: 2px dashed #ff4757;
-        }
-        
-        .media-removed-message {
-            color: #ff4757;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-    </style>
+    .btn-danger {
+      background: rgba(231, 76, 60, 0.2);
+      color: #e74c3c;
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: rgba(231, 76, 60, 0.3);
+      color: #fff;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+      color: #FFD700;
+    }
+
+    .character-count {
+      text-align: right;
+      margin-top: 5px;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .delete-section {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+    }
+
+    .delete-warning {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* Footer */
+    .admin-footer {
+      text-align: center;
+      padding: 2rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      .admin-content {
+        padding: 1.5rem;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .form-actions {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .media-actions {
+        flex-direction: column;
+      }
+    }
+
+    /* Loading animation */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .fa-spinner {
+      animation: spin 1s linear infinite;
+    }
+
+    /* Custom file input styling */
+    .form-file::-webkit-file-upload-button {
+      visibility: hidden;
+    }
+
+    .form-file::before {
+      content: 'Choose File';
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      padding: 8px 16px;
+      outline: none;
+      white-space: nowrap;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+    }
+
+    .form-file:hover::before {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .form-file:active::before {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
 </head>
 <body>
     <div class="admin-container">
@@ -368,218 +410,150 @@
             <h1 class="admin-title">Edit Post</h1>
             <p class="admin-subtitle">Update your post content</p>
         </div>
-        
-        <div class="admin-content">
-            <div class="status-message" id="statusMessage"></div>
-            
-            <form method="POST" action="/edit-post/<%= data._id %>?_method=PUT" enctype="multipart/form-data" id="postForm">
-                <!-- Hidden field to track media removal -->
-                <input type="hidden" id="removeMedia" name="removeMedia" value="false">
-                
-                <div class="form-group">
-                    <label for="title" class="form-label">
-                        <i class="fas fa-heading"></i> Post Title
-                    </label>
-                    <input type="text" id="title" name="title" class="form-input" value="<%= data.title %>" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="featuredMedia" class="form-label">
-                        <i class="fas fa-image"></i> Featured Media
-                    </label>
-                    
-                    <% if (data.featuredImage) { %>
-                        <div class="current-media" id="currentMedia">
-                            <p>Current media:</p>
-                            <% if (data.mediaType === 'image') { %>
-                                <img src="<%= data.featuredImage %>" alt="Current featured image" id="mediaElement">
-                            <% } else if (data.mediaType === 'video') { %>
-                                <video src="<%= data.featuredImage %>" controls style="max-width: 100%;" id="mediaElement"></video>
-                            <% } else { %>
-                                <img src="<%= data.featuredImage %>" alt="Current featured media" id="mediaElement">
-                            <% } %>
-                            
-                            <div class="media-actions">
-                                <button type="button" class="remove-media-btn" id="removeMediaBtn">
-                                    <i class="fas fa-trash"></i> Remove Media
-                                </button>
-                                <button type="button" class="btn-warning" id="restoreMediaBtn" style="display: none;">
-                                    <i class="fas fa-undo"></i> Restore Media
-                                </button>
-                            </div>
-                            <div id="mediaRemovedMessage" class="media-removed-message" style="display: none;">
-                                Media will be removed when you update the post
-                            </div>
-                        </div>
-                    <% } %>
-                    
-                    <div>
-                        <input type="file" id="featuredMedia" name="featuredMedia" class="form-file" accept="image/*,video/*">
-                        <span class="file-info">Upload new file to replace current media. Supported: JPEG, PNG, GIF, MP4, MOV, AVI, WebM (Max 50MB)</span>
-                    </div>
-                    <div class="file-preview" id="filePreview"></div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="body" class="form-label">
-                        <i class="fas fa-align-left"></i> Content
-                    </label>
-                    <textarea id="body" name="body" class="form-textarea" required><%= data.body %></textarea>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Update Post
-                    </button>
-                    <a href="/dashboard" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> Cancel
-                    </a>
-                </div>
-            </form>
-            
-            <form action="/delete-post/<%= data._id %>?_method=DELETE" method="POST" class="delete-form">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post? This action cannot be undone.')">
-                    <i class="fas fa-trash"></i> Delete Post
-                </button>
-            </form>
-            
-            <a href="/dashboard" class="back-link">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </a>
+
+    <div class="admin-content">
+      <div id="statusMessage" class="status-message"></div>
+
+      <form method="POST" action="/admin/edit-post/<%= data._id %>?_method=PUT" enctype="multipart/form-data" id="postForm">
+        <input type="hidden" id="removeMedia" name="removeMedia" value="false">
+
+        <div class="form-group">
+          <label for="title" class="form-label">Post Title</label>
+          <input type="text" id="title" name="title" class="form-input" value="Testing 123" required maxlength="150">
+          <div class="character-count"><span id="titleCount">11</span>/150 characters</div>
         </div>
+
+        <div class="form-group">
+          <label for="featuredMedia" class="form-label">Featured Media</label>
+          
+          <div style="margin-top: 15px;">
+            <input type="file" id="featuredMedia" name="featuredMedia" class="form-file" accept="image/*,video/*">
+            <span class="file-info">Replace with new media: JPEG, PNG, GIF, MP4, MOV, AVI, WebM (Max 50MB)</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="body" class="form-label">Content</label>
+          <textarea id="body" name="body" class="form-textarea" required>Testing 123</textarea>
+          <div class="character-count"><span id="bodyCount">12</span> characters</div>
+        </div>
+
+        <div class="form-actions">
+          <div>
+            <a href="/admin/dashboard" class="back-link">
+              <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <a href="/admin/dashboard" class="btn btn-secondary">
+              <i class="fas fa-times"></i> Cancel
+            </a>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Update Post
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div class="delete-section">
+        <p class="delete-warning">
+          <i class="fas fa-exclamation-triangle"></i> Deleting a post is permanent and cannot be undone.
+        </p>
+        <form action="/admin/delete-post/<%= data._id %>?_method=DELETE" method="POST" class="delete-form">
+          <button type="submit" class="btn btn-danger" id="deleteBtn">
+            <i class="fas fa-trash"></i> Delete Post
+          </button>
+        </form>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // File preview functionality
-        document.getElementById('featuredMedia').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const preview = document.getElementById('filePreview');
-            
-            if (file) {
-                preview.innerHTML = '';
-                preview.classList.add('active');
-                
-                const fileName = document.createElement('div');
-                fileName.className = 'file-name';
-                fileName.textContent = `New file: ${file.name}`;
-                preview.appendChild(fileName);
-                
-                if (file.type.startsWith('image/')) {
-                    const img = document.createElement('img');
-                    img.src = URL.createObjectURL(file);
-                    preview.insertBefore(img, fileName);
-                } else if (file.type.startsWith('video/')) {
-                    const video = document.createElement('video');
-                    video.controls = true;
-                    video.src = URL.createObjectURL(file);
-                    video.style.maxWidth = '100%';
-                    preview.insertBefore(video, fileName);
-                }
-                
-                // If user uploads a new file, cancel any media removal
-                document.getElementById('removeMedia').value = 'false';
-                const currentMedia = document.getElementById('currentMedia');
-                if (currentMedia) {
-                    currentMedia.classList.remove('media-removed');
-                    document.getElementById('removeMediaBtn').style.display = 'block';
-                    document.getElementById('restoreMediaBtn').style.display = 'none';
-                    document.getElementById('mediaRemovedMessage').style.display = 'none';
-                }
-            } else {
-                preview.classList.remove('active');
-            }
-        });
+  <!-- Footer -->
+  <div class="admin-footer">
+    <p>© 2025 Sanya Blog Admin</p>
+  </div>
 
-        // Media removal functionality
-        const removeMediaBtn = document.getElementById('removeMediaBtn');
-        const restoreMediaBtn = document.getElementById('restoreMediaBtn');
-        const mediaRemovedMessage = document.getElementById('mediaRemovedMessage');
-        const currentMedia = document.getElementById('currentMedia');
-        const removeMediaInput = document.getElementById('removeMedia');
-        
-        if (removeMediaBtn) {
-            removeMediaBtn.addEventListener('click', function() {
-                currentMedia.classList.add('media-removed');
-                removeMediaInput.value = 'true';
-                removeMediaBtn.style.display = 'none';
-                restoreMediaBtn.style.display = 'block';
-                mediaRemovedMessage.style.display = 'block';
-                
-                // Clear file input if any file was selected
-                document.getElementById('featuredMedia').value = '';
-                document.getElementById('filePreview').classList.remove('active');
-            });
+  <script>
+    // Character counters
+    const titleInput = document.getElementById('title');
+    const bodyTextarea = document.getElementById('body');
+    const titleCount = document.getElementById('titleCount');
+    const bodyCount = document.getElementById('bodyCount');
+
+    if (titleInput && titleCount) {
+      titleInput.addEventListener('input', function() {
+        titleCount.textContent = this.value.length;
+      });
+    }
+
+    if (bodyTextarea && bodyCount) {
+      bodyTextarea.addEventListener('input', function() {
+        bodyCount.textContent = this.value.length;
+      });
+    }
+
+    // Form submission handling
+    document.getElementById('postForm')?.addEventListener('submit', function(e) {
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      
+      submitBtn.innerHTML = '<i class="fas fa-spinner"></i> Updating...';
+      submitBtn.disabled = true;
+      
+      // Re-enable after 5 seconds if still on page (form submission failed)
+      setTimeout(() => {
+        if (submitBtn.disabled) {
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
         }
-        
-        if (restoreMediaBtn) {
-            restoreMediaBtn.addEventListener('click', function() {
-                currentMedia.classList.remove('media-removed');
-                removeMediaInput.value = 'false';
-                removeMediaBtn.style.display = 'block';
-                restoreMediaBtn.style.display = 'none';
-                mediaRemovedMessage.style.display = 'none';
-            });
-        }
+      }, 5000);
+    });
 
-        // Form submission feedback
-        document.getElementById('postForm').addEventListener('submit', function(e) {
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
-            submitBtn.disabled = true;
-            
-            // Re-enable after 5 seconds if still on page (form submission failed)
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }, 5000);
-        });
+    // Delete button confirmation
+    document.getElementById('deleteBtn')?.addEventListener('click', function(e) {
+      e.preventDefault();
+      const form = this.closest('form');
+      
+      if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+        const originalText = this.innerHTML;
+        this.innerHTML = '<i class="fas fa-spinner"></i> Deleting...';
+        this.disabled = true;
         
-        // Show status message if present in URL parameters
-        window.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const status = urlParams.get('status');
-            const message = urlParams.get('message');
-            
-            if (status && message) {
-                const statusElement = document.getElementById('statusMessage');
-                statusElement.textContent = message;
-                statusElement.className = `status-message status-${status}`;
-                statusElement.style.display = 'block';
-                
-                // Remove parameters from URL without reloading
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-        });
+        form.submit();
         
-        // Delete confirmation
-        document.querySelector('.btn-danger').addEventListener('click', function(e) {
-            if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
-                e.preventDefault();
-            }
-        });
-    </script>
+        // Re-enable after 5 seconds if still on page (form submission failed)
+        setTimeout(() => {
+          if (this.disabled) {
+            this.innerHTML = originalText;
+            this.disabled = false;
+          }
+        }, 5000);
+      }
+    });
+
+    // Show status message if present in URL parameters
+    window.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const status = urlParams.get('status');
+      const message = urlParams.get('message');
+      
+      if (status && message) {
+        const statusElement = document.getElementById('statusMessage');
+        statusElement.textContent = message;
+        statusElement.className = `status-message status-${status}`;
+        statusElement.style.display = 'block';
+        
+        // Remove parameters from URL without reloading
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
+        // Auto-hide success messages after 5 seconds
+        if (status === 'success') {
+          setTimeout(() => {
+            statusElement.style.display = 'none';
+          }, 5000);
+        }
+      }
+    });
+  </script>
 </body>
 </html>
-
-<!-- <a href="/dashboard">&larr; Back</a>
-<div class="admin-title">
-    <h2> View / Edit Post </h2>
-
-    <form action="/delete-post/<%= data._id %>?_method=DELETE" method="POST">
-        <input type="submit" value="Delete" class="btn-delete btn">
-    </form>
-
-</div>
-
-<form action="/edit-post/<%= data._id %>?_method=PUT" method="POST"> 
-
-    <label for="title"><b>Title</b></label>
-    <input type="text" placeholder="Post Title" name="title" value="<%= data.title %>">
-
-    <label for="body"><b>Content</b></label>
-    <textarea name="body" rows="10" cols = "50"><%= data.body %></textarea>
-
-    <input type="submit" value="Update" class="btn">
-</form> -->

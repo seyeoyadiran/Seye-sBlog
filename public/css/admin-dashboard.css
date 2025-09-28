@@ -1,0 +1,247 @@
+.admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.admin-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.btn-add {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px) saturate(150%);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 12px;
+  padding: 0.5rem 1.2rem;
+  color: #fff;
+  font-weight: 500;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+.btn-add:hover {
+  background: rgba(255,255,255,0.2);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.tab-nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 10px 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-align: center;
+  border-bottom: 3px solid transparent;
+}
+.tab-btn.active {
+  color: #fff;
+  border-bottom: 3px solid #8e44ad;
+}
+.tab-btn:not(.active) {
+  color: #ccc;
+}
+.tab-btn:hover {
+  color: #8e44ad;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.card {
+  background: linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #ccc;
+}
+.card p {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #8e44ad;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.chart-container {
+  background: linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+}
+.top-posts-list div {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+/* Updated Posts Section Styles */
+.posts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.posts-header h3 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.sort-wrapper select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%23ffffff' d='m0 1 2 2 2-2z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 0.65rem auto;
+}
+.sort-wrapper select:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.admin-posts {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin-posts li {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.admin-posts li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.25);
+  background: rgba(255,255,255,0.12);
+}
+
+.admin-posts li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+  flex: 1;
+}
+
+.admin-posts li a:hover {
+  color: #8e44ad;
+}
+
+.admin-post-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-edit {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-edit:hover {
+  background: rgba(76, 175, 80, 0.3);
+  color: #fff;
+}
+
+.btn-delete {
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-delete:hover {
+  background: rgba(244, 67, 54, 0.3);
+  color: #fff;
+}
+
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .admin-posts li {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+  }
+  
+  .admin-post-controls {
+      align-self: flex-end;
+  }
+  
+  .charts-grid {
+      grid-template-columns: 1fr;
+  }
+  
+  .admin-container {
+      padding: 0 20px;
+  }
+  
+  .posts-header {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+}

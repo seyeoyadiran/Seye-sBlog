@@ -7,14 +7,14 @@ const SiteVisit = require('../models/Sitevisit');
 // Helper function to track site visits
 async function trackSiteVisit() {
     try {
-        const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        const today = new Date().toISOString().split('T')[0];
         await SiteVisit.findOneAndUpdate(
             { date: today },
             { $inc: { count: 1 }, lastUpdated: new Date() },
             { upsert: true, new: true }
         );
     } catch (error) {
-        console.error('Error tracking site visit:', error);
+        console.error('⚠️ SiteVisit tracking failed:', error.message);
     }
 }
 
