@@ -1,20 +1,14 @@
 // app.js
-import dotenv from 'dotenv';
-dotenv.config();
-import express from 'express';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import methodOverride from 'method-override';
-import expressLayouts from 'express-ejs-layouts';
-import { fileURLToPath } from 'url';
+require('dotenv').config();
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const methodOverride = require('method-override');
+const expressLayouts = require("express-ejs-layouts");
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Import helpers and routes
-import { isActiveRoute } from './server/helpers/routeHelpers.js';
-import adminRoutes from './server/routes/admin.js';
-import mainRoutes from './server/routes/main.js';
+const { isActiveRoute } = require('./server/helpers/routeHelpers');
+const adminRoutes = require('./server/routes/admin');
+const mainRoutes = require('./server/routes/main');
 
 const app = express();
 
@@ -84,4 +78,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-export default app;
+module.exports = app;
