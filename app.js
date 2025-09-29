@@ -26,7 +26,21 @@ connectDB()
     console.error('❌ Database connection failed:', error.message);
     dbConnected = false;
   });
-
+  
+  app.use((req, res, next) => {
+    // Set timeout for all requests (10 seconds)
+    req.setTimeout(10000, () => {
+      console.log('Request timeout for:', req.url);
+    });
+    
+    res.setTimeout(10000, () => {
+      if (!res.headersSent) {
+        console.log('Response timeout for:', req.url);
+        res.status(504).json({ error: 'Request timeout' });
+      }
+    });
+    next();
+  });
 // ======= DATABASE STATUS MIDDLEWARE =======
 app.use((req, res, next) => {
   req.dbConnected = dbConnected;
