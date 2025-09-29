@@ -27,7 +27,7 @@ async function connectDB() {
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 15000, // Reduced from 30s for serverless
       socketTimeoutMS: 30000,
-      bufferMaxEntries: 0,
+      // Remove bufferMaxEntries - it's deprecated
     };
 
     console.log('📡 Creating new MongoDB connection...');
