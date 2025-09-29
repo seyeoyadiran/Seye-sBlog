@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const methodOverride = require('method-override');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
 const expressLayouts = require("express-ejs-layouts");
 const serverless = require('serverless-http');
 
@@ -39,21 +40,32 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(methodOverride('_method'));
 
-// ======= SESSION =======
+// ======= SESSION (MongoDB store) =======
 const mongoURI = process.env.MONGODB_URI;
-let store = new session.MemoryStore(); // fallback for serverless
+if (!mongoURI) {
+  console.warn("⚠️ No MONGODB_URI found in environment variables. Sessions may not persist.");
+}
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'fallback-secret-key-change-in-production',
-  resave: false,
-  saveUninitialized: false,
-  store,
-  cookie: {
-    maxAge: 24 * 60 * 60 * 1000,
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true
-  }
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'fallback-secret-key-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    store: mongoURI
+      ? MongoStore.create({
+          mongoUrl: mongoURI,
+          ttl: 14 * 24 * 60 * 60, // 14 days
+          autoRemove: 'native',
+        })
+      : undefined, // fallback is in-memory if no DB
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      sameSite: 'lax',
+    },
+  })
+);
 
 // ======= SECURITY HEADERS =======
 app.use((req, res, next) => {

@@ -1,15 +1,6 @@
-const serverless = require('serverless-http');
-const { app, connectDB } = require('../app');
+// api/index.js
+const app = require("../app");
 
-const mongoURI = process.env.MONGODB_URI;
-
-app.use(async (req, res, next) => {
-  try {
-    await connectDB(mongoURI);
-    next();
-  } catch (err) {
-    next(err);
-  }
-});
-
-module.exports = serverless(app);
+module.exports = (req, res) => {
+  return app(req, res);
+};
