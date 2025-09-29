@@ -179,38 +179,45 @@ router.get('/edit-post/:id', authMiddleware, async (req, res) => {
 });
 
 router.put('/edit-post/:id', authMiddleware, upload.array('featuredMedia', 10), async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    if (!post) return res.redirect(`/admin/edit-post/${req.params.id}?status=error&message=Post not found`);
-
-    // Remove old media if requested
-    if (req.body.removeMedia === 'true' && post.media && post.media.length > 0) {
-      post.media.forEach(m => {
-        const oldPath = path.join(__dirname, '..', 'public', m.url);
-        fs.unlink(oldPath, err => { if (err) console.error('Failed to delete media:', err); });
-      });
-      post.media = [];
+    try {
+      const post = await Post.findById(req.params.id);
+      if (!post) return res.redirect(`/admin/edit-post/${req.params.id}?status=error&message=Post not found`);
+  
+      // Remove selected media
+      if (req.body.removeMediaIndexes) {
+        const indexesToRemove = req.body.removeMediaIndexes.split(',').map(i => parseInt(i));
+        post.media = post.media.filter((m, idx) => {
+          if (indexesToRemove.includes(idx)) {
+            const oldPath = path.join(__dirname, '..', 'public', m.url);
+            fs.unlink(oldPath, err => { if (err) console.error('Failed to delete media:', err); });
+            return false; // remove from array
+          }
+          return true; // keep in array
+        });
+      }
+  
+      // Append new media
+      if (req.files && req.files.length > 0) {
+        const newMedia = req.files.map(file => ({
+          url: '/uploads/' + file.filename,
+          type: file.mimetype.startsWith('image/') ? 'image' : 'video'
+        }));
+        post.media = [...post.media, ...newMedia];
+      }
+  
+      // Update text
+      post.title = req.body.title;
+      post.body = req.body.body;
+      post.updatedAt = Date.now();
+  
+      await post.save();
+      res.redirect(`/admin/edit-post/${req.params.id}?status=success&message=Post updated successfully`);
+    } catch (err) {
+      console.error('Edit post error:', err);
+      res.redirect(`/admin/edit-post/${req.params.id}?status=error&message=Error updating post`);
     }
-
-    // Add new media if uploaded
-    if (req.files && req.files.length > 0) {
-      post.media = req.files.map(file => ({
-        url: '/uploads/' + file.filename,
-        type: file.mimetype.startsWith('image/') ? 'image' : 'video'
-      }));
-    }
-
-    post.title = req.body.title;
-    post.body = req.body.body;
-    post.updatedAt = Date.now();
-
-    await post.save();
-    res.redirect(`/admin/edit-post/${req.params.id}?status=success&message=Post updated successfully`);
-  } catch (err) {
-    console.error('Edit post error:', err);
-    res.redirect(`/admin/edit-post/${req.params.id}?status=error&message=Error updating post`);
-  }
-});
+  });
+  
 
 // =======================
 // Delete Post
