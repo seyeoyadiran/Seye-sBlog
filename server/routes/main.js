@@ -17,12 +17,28 @@ async function trackSiteVisit() {
     }
 }
 
+// Database connection check helper
+function checkDBConnection(req, res) {
+    if (!req.dbConnected) {
+        res.status(503).render('error', {
+            title: 'Service Unavailable',
+            message: 'Database service is temporarily unavailable. Please try again later.',
+            currentRoute: req.path
+        });
+        return false;
+    }
+    return true;
+}
+
 /*
 Get
 / Home
 */
 router.get('/', async (req, res) => {
     try {
+        // Check database connection first
+        if (!checkDBConnection(req, res)) return;
+
         await trackSiteVisit();
 
         const locals = {
@@ -33,9 +49,12 @@ router.get('/', async (req, res) => {
         const perPage = 10;
         const page = parseInt(req.query.page) || 1;
 
-        const data = await Post.aggregate([{ $sort: { createdAt: -1 } }])
+        // Use find() instead of aggregate for better performance in serverless
+        const data = await Post.find({})
+            .sort({ createdAt: -1 })
             .skip(perPage * (page - 1))
-            .limit(perPage);
+            .limit(perPage)
+            .lean(); // Use lean() for better performance
 
         const count = await Post.countDocuments();
         const nextPage = page + 1;
@@ -50,6 +69,16 @@ router.get('/', async (req, res) => {
         });
     } catch (error) {
         console.error('⚠️ Homepage error:', error);
+        
+        // Handle specific database errors
+        if (error.name === 'MongoNetworkError' || error.name === 'MongooseError') {
+            return res.status(503).render('error', {
+                title: 'Service Unavailable',
+                message: 'Database service is temporarily unavailable. Please try again later.',
+                currentRoute: '/'
+            });
+        }
+        
         res.status(500).render('error', {
             title: 'Error',
             message: 'There was an error loading the homepage.',
@@ -64,6 +93,9 @@ Post: Id
 */
 router.get('/post/:id', async (req, res) => {
     try {
+        // Check database connection first
+        if (!checkDBConnection(req, res)) return;
+
         let slug = req.params.id;
 
         // Validate if slug is a valid MongoDB ObjectId
@@ -104,6 +136,16 @@ router.get('/post/:id', async (req, res) => {
         });
     } catch (error) {
         console.log(error);
+        
+        // Handle specific database errors
+        if (error.name === 'MongoNetworkError' || error.name === 'MongooseError') {
+            return res.status(503).render('error', {
+                title: 'Service Unavailable',
+                message: 'Database service is temporarily unavailable. Please try again later.',
+                currentRoute: '/post/' + req.params.id
+            });
+        }
+        
         res.status(500).render('error', {
             title: 'Error',
             message: 'There was an error loading the post.',
@@ -118,6 +160,9 @@ router.get('/post/:id', async (req, res) => {
  */
 router.post('/search', async (req, res) => {
     try {
+        // Check database connection first
+        if (!checkDBConnection(req, res)) return;
+
         const locals = {
             title: "Search",
             description: "Simple Blog Created with NodeJs, Express, and Mongodb"
@@ -131,7 +176,7 @@ router.post('/search', async (req, res) => {
                 { title: { $regex: new RegExp(searchNoSpecialChar, 'i') } },
                 { body: { $regex: new RegExp(searchNoSpecialChar, 'i') } },
             ]
-        });
+        }).lean(); // Use lean() for better performance
 
         res.render("search", {
             data,
@@ -140,6 +185,16 @@ router.post('/search', async (req, res) => {
         });
     } catch (error) {
         console.log(error);
+        
+        // Handle specific database errors
+        if (error.name === 'MongoNetworkError' || error.name === 'MongooseError') {
+            return res.status(503).render('error', {
+                title: 'Service Unavailable',
+                message: 'Database service is temporarily unavailable. Please try again later.',
+                currentRoute: '/search'
+            });
+        }
+        
         res.status(500).render('error', {
             title: 'Error',
             message: 'There was an error performing the search.',
@@ -151,7 +206,11 @@ router.post('/search', async (req, res) => {
 /* Routes for about and contact page */
 router.get('/about', async (req, res) => {
     try {
-        await trackSiteVisit();
+        // About page doesn't need database, but track visits if available
+        if (req.dbConnected) {
+            await trackSiteVisit();
+        }
+        
         res.render('about', {
             currentRoute: '/about'
         });
@@ -167,7 +226,11 @@ router.get('/about', async (req, res) => {
 
 router.get('/contact', async (req, res) => {
     try {
-        await trackSiteVisit();
+        // Contact page doesn't need database, but track visits if available
+        if (req.dbConnected) {
+            await trackSiteVisit();
+        }
+        
         res.render('contact', {
             currentRoute: '/contact'
         });
