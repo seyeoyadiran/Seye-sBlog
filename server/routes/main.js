@@ -22,44 +22,43 @@ async function trackSiteVisit() {
 Get
 / Home
 */
-router.get('', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
-        // Track site visit for homepage
-        await trackSiteVisit();
-
-        const locals = {
-            title: "Oluwaseye's Blog",
-            description: "Simple Blog Created with NodeJs, Express, and Mongodb"
-        }
-
-        let perPage = 10;
-        let page = req.query.page || 1;
-
-        const data = await Post.aggregate([{ $sort: { createdAt: -1 } }])
-            .skip(perPage * page - perPage)
-            .limit(perPage)
-            .exec();
-
-        const count = await Post.countDocuments();
-        const nextPage = parseInt(page) + 1;
-        const hasNextPage = nextPage <= Math.ceil(count / perPage);
-
-        res.render('index', {
-            locals,
-            data,
-            current: page,
-            nextPage: hasNextPage ? nextPage : null,
-            currentRoute: '/'
-        });
+      await trackSiteVisit();
+  
+      const locals = {
+        title: "Oluwaseye's Blog",
+        description: "Simple Blog Created with NodeJs, Express, and Mongodb"
+      };
+  
+      const perPage = 10;
+      const page = parseInt(req.query.page) || 1;
+  
+      const data = await Post.aggregate([{ $sort: { createdAt: -1 } }])
+        .skip(perPage * (page - 1))
+        .limit(perPage);
+  
+      const count = await Post.countDocuments();
+      const nextPage = page + 1;
+      const hasNextPage = nextPage <= Math.ceil(count / perPage);
+  
+      res.render('index', {
+        locals,
+        data,
+        current: page,
+        nextPage: hasNextPage ? nextPage : null,
+        currentRoute: '/'
+      });
     } catch (error) {
-        console.log(error);
-        res.status(500).render('error', {
-            title: 'Error',
-            message: 'There was an error loading the homepage.',
-            currentRoute: '/'
-        });
+      console.error('⚠️ Homepage error:', error);
+      res.status(500).render('error', {
+        title: 'Error',
+        message: 'There was an error loading the homepage.',
+        currentRoute: '/'
+      });
     }
-});
+  });
+  
 
 /*
 Get

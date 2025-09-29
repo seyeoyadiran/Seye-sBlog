@@ -176,8 +176,19 @@
 <body>
 
     <div class="post-container container">
-
-        <% if (data.featuredImage) { %>
+        <% if (data.media && data.media.length > 0) { %>
+            <% data.media.forEach(m => { %>
+                <% if (m.type === 'image') { %>
+                    <img src="<%= m.url %>" alt="<%= data.title %>" class="post-featured-media">
+                <% } else if (m.type === 'video') { %>
+                    <video controls class="featured-video">
+                        <source src="<%= m.url %>" type="video/mp4">
+                        <source src="<%= m.url %>" type="video/webm">
+                        Your browser does not support the video tag.
+                    </video>
+                <% } %>
+            <% }) %>
+        <% } else if (data.featuredImage) { %>
             <% if (data.mediaType === 'image') { %>
                 <img src="<%= data.featuredImage %>" alt="<%= data.title %>" class="post-featured-media">
             <% } else if (data.mediaType === 'video') { %>
@@ -186,11 +197,9 @@
                     <source src="<%= data.featuredImage %>" type="video/webm">
                     Your browser does not support the video tag.
                 </video>
-            <% } else { %>
-                <!-- Fallback for existing posts without mediaType -->
-                <img src="<%= data.featuredImage %>" alt="<%= data.title %>" class="post-featured-media">
             <% } %>
         <% } %>
+        
 
         <h1 class="post-title"><%= data.title %></h1>
 

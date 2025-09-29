@@ -1,4 +1,190 @@
-<div style="
+<div class="auth-container">
+    <h1 class="admin-header">Seye's Admin Login</h1>
+
+    <div class="auth-box">
+  
+      <!-- Tabs -->
+      <div class="tabs">
+        <button id="loginTab" class="active" onclick="switchForm('login')">Login</button>
+        <button id="registerTab" onclick="switchForm('register')">Register</button>
+      </div>
+  
+      <!-- Status Message -->
+      <% if (typeof query !== 'undefined' && query.status && query.message) { %>
+        <p class="message <%= query.status === 'success' ? 'success' : 'error' %>">
+          <%= query.message %>
+        </p>
+      <% } %>
+  
+      <!-- Login Form -->
+      <form id="loginForm" method="POST" action="/admin">
+        <h2>Login</h2>
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+  
+      <!-- Register Form -->
+      <form id="registerForm" method="POST" action="/admin/register" style="display:none;">
+        <h2>Register</h2>
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Register</button>
+      </form>
+  
+    </div>
+</div>
+
+<!-- JS -->
+<script>
+let currentTab = 'login';
+function switchForm(tab){
+    currentTab = tab;
+    document.getElementById('loginForm').style.display = tab==='login'?'flex':'none';
+    document.getElementById('registerForm').style.display = tab==='register'?'flex':'none';
+    document.getElementById('loginTab').classList.toggle('active', tab==='login');
+    document.getElementById('registerTab').classList.toggle('active', tab==='register');
+}
+
+// Auto-switch to register tab if registration error occurred
+<% if (typeof query !== 'undefined' && query.status === 'error' && query.message.toLowerCase().includes('username')) { %>
+  window.addEventListener('DOMContentLoaded', () => { switchForm('register'); });
+<% } %>
+</script>
+
+<!-- CSS -->
+<style>
+body { 
+    margin:0; 
+    font-family: 'Poppins', sans-serif; 
+    background-color: #2C2C54; 
+    display:flex; 
+    justify-content:center; 
+    align-items:center; 
+    min-height:100vh;
+    flex-direction: column;
+}
+
+.admin-header {
+    color: #FFD700;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+}
+
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.auth-box {
+    width:100%;
+    max-width:600px; /* Bigger form */
+    padding:50px 40px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+    align-items: center; /* center content */
+}
+
+.tabs {
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    border-bottom:2px solid rgba(255,255,255,0.2);
+    width: 100%;
+}
+
+.tabs button {
+    flex:1;
+    padding:15px 0;
+    border:none;
+    background:transparent;
+    color:#ccc;
+    font-weight:600;
+    cursor:pointer;
+    transition: all 0.3s;
+    border-bottom:3px solid transparent;
+    font-size: 1.1rem;
+}
+
+.tabs button.active {
+    color:#fff;
+    border-bottom:3px solid #FFD700;
+}
+
+form {
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+    width: 100%; /* full width inside auth-box */
+    align-items: center;
+}
+
+form h2 {
+    text-align:center;
+    color:#FFD700;
+    font-size:1.8rem;
+    font-weight:700;
+    letter-spacing:0.5px;
+}
+
+input {
+    padding:15px;
+    border-radius:12px;
+    border:none;
+    background: rgba(255,255,255,0.1);
+    color:#fff;
+    font-weight:500;
+    transition: all 0.3s;
+    font-size: 1rem;
+    width: 80%; /* bigger inputs */
+}
+
+input:focus {
+    background: rgba(255,255,255,0.2);
+    outline:none;
+}
+
+button[type="submit"] {
+    padding:16px;
+    border:none;
+    border-radius:12px;
+    background:#FFD700;
+    color:#2C2C54;
+    font-weight:700;
+    cursor:pointer;
+    transition: all 0.3s;
+    font-size: 1.1rem;
+    width: 50%; /* centered smaller button */
+}
+
+button[type="submit"]:hover {
+    background:#e6c200;
+}
+
+.message {
+    text-align:center;
+    margin-bottom:10px;
+    width: 100%;
+}
+
+.message.success { color:#0f0; }
+.message.error { color:#f00; }
+</style>
+
+<!-- <div style="
     min-height:100vh;
     display:flex;
     justify-content:center;
@@ -19,9 +205,9 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.4);
       color: #fff;
   ">
-
+-->
     <!-- Tabs -->
-    <div style="display:flex; justify-content:center; gap:20px; margin-bottom:35px; border-bottom:2px solid rgba(255,255,255,0.2); flex-wrap:wrap;">
+    <!-- <div style="display:flex; justify-content:center; gap:20px; margin-bottom:35px; border-bottom:2px solid rgba(255,255,255,0.2); flex-wrap:wrap;">
       <button id="loginTab" class="active" onclick="switchForm('login')" style="
           flex:1;
           padding:12px 0;
@@ -44,10 +230,10 @@
           cursor:pointer;
           transition: all 0.3s;
       ">Register</button>
-    </div>
+    </div> -->
 
     <!-- Login Form -->
-    <form id="loginForm" method="POST" action="/admin" style="display:flex; flex-direction:column; gap:20px;">
+    <!-- <form id="loginForm" method="POST" action="/admin" style="display:flex; flex-direction:column; gap:20px;">
         <h2 style="text-align:center; color:#FFD700; font-size:1.6rem; font-weight:700; letter-spacing:0.5px;">Login</h2>
         <input type="text" id="username" name="username" placeholder="Username" required style="
             padding:12px;
@@ -79,8 +265,8 @@
         " onmouseover="this.style.background='#e6c200';" onmouseout="this.style.background='#FFD700';">Login</button>
     </form>
 
-    <!-- Register Form -->
-    <form id="registerForm" action="/register" method="POST" style="display:none; flex-direction:column; gap:20px;">
+    Register Form -->
+    <!-- <form id="registerForm" action="/admin/register" method="POST" style="display:none; flex-direction:column; gap:20px;">
         <h2 style="text-align:center; color:#FFD700; font-size:1.6rem; font-weight:700; letter-spacing:0.5px;">Register</h2>
         <input type="text" id="registerUsername" name="username" placeholder="Username" required style="
             padding:12px;
@@ -126,4 +312,4 @@ function switchForm(tab){
     document.getElementById('loginTab').style.color = tab==='login'?'#fff':'#ccc';
     document.getElementById('registerTab').style.color = tab==='register'?'#fff':'#ccc';
 }
-</script>
+</script> --> 

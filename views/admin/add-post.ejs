@@ -1,599 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Post - Admin Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            min-height: 100vh;
-            
-        }
-
-        .admin-container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: rgba(23, 25, 35, 0.9);
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .admin-header {
-            padding: 30px 40px 20px;
-            background: rgba(30, 33, 48, 0.8);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .admin-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, #8e44ad, #9b59b6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: #FFD700;
-            margin-bottom: 8px;
-            
-        }
-
-        .admin-subtitle {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1rem;
-            font-weight: 400;
-        }
-
-        .admin-content {
-            padding: 30px 40px 40px;
-        }
-
-        .status-message {
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            font-weight: 500;
-            display: none;
-        }
-
-        .status-success {
-            background: rgba(46, 204, 113, 0.2);
-            border: 1px solid rgba(46, 204, 113, 0.4);
-            color: #2ecc71;
-        }
-
-        .status-error {
-            background: rgba(231, 76, 60, 0.2);
-            border: 1px solid rgba(231, 76, 60, 0.4);
-            color: #e74c3c;
-        }
-
-        .form-group {
-            margin-bottom: 30px;
-        }
-
-        .form-label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            font-weight: 600;
-            color: #fff;
-            font-size: 1rem;
-        }
-
-        .form-label i {
-            margin-right: 10px;
-            color: #9b59b6;
-            width: 20px;
-            text-align: center;
-        }
-
-        .form-input, .form-textarea, .form-file {
-            width: 100%;
-            padding: 14px 18px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            color: #fff;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .form-input:focus, .form-textarea:focus {
-            border-color: #8e44ad;
-            outline: none;
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.2);
-        }
-
-        .form-textarea {
-            min-height: 200px;
-            resize: vertical;
-            line-height: 1.6;
-        }
-
-        .form-file {
-            padding: 12px;
-            cursor: pointer;
-        }
-
-        .file-info {
-            display: block;
-            margin-top: 8px;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .selected-media {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 1px dashed rgba(255, 255, 255, 0.1);
-        }
-
-        .selected-media p {
-            margin-bottom: 15px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        #mediaElementContainer {
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        #mediaElementContainer img, #mediaElementContainer video {
-            max-width: 100%;
-            max-height: 300px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .file-name {
-            margin-top: 10px;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-
-        .media-actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .remove-media-btn, .btn-warning {
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .remove-media-btn {
-            background: rgba(231, 76, 60, 0.2);
-            color: #e74c3c;
-            border: 1px solid rgba(231, 76, 60, 0.3);
-        }
-
-        .remove-media-btn:hover {
-            background: rgba(231, 76, 60, 0.3);
-        }
-
-        .btn-warning {
-            background: rgba(241, 196, 15, 0.2);
-            color: #f1c40f;
-            border: 1px solid rgba(241, 196, 15, 0.3);
-        }
-
-        .btn-warning:hover {
-            background: rgba(241, 196, 15, 0.3);
-        }
-
-        .media-removed-message {
-            padding: 10px 14px;
-            background: rgba(231, 76, 60, 0.1);
-            border-radius: 6px;
-            margin-top: 10px;
-            color: #e74c3c;
-            font-size: 0.9rem;
-            border-left: 3px solid #e74c3c;
-        }
-
-        .no-media-message {
-            padding: 15px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            color: rgba(255, 255, 255, 0.5);
-            font-style: italic;
-            border: 1px dashed rgba(255, 255, 255, 0.1);
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 35px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .btn {
-            padding: 14px 28px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #8e44ad, #9b59b6);
-            color: white;
-            box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(142, 68, 173, 0.4);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            margin-top: 25px;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .back-link:hover {
-            color: #9b59b6;
-        }
-
-        .character-count {
-            text-align: right;
-            margin-top: 5px;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            .admin-container {
-                border-radius: 12px;
-            }
-
-            .admin-header, .admin-content {
-                padding: 25px 20px;
-            }
-
-            .admin-title {
-                font-size: 1.8rem;
-            }
-
-            .form-actions {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .media-actions {
-                flex-direction: column;
-            }
-        }
-
-        /* Loading animation */
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .fa-spinner {
-            animation: spin 1s linear infinite;
-        }
-
-        /* Custom file input styling */
-        .form-file::-webkit-file-upload-button {
-            visibility: hidden;
-        }
-
-        .form-file::before {
-            content: 'Choose File';
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            padding: 8px 16px;
-            outline: none;
-            white-space: nowrap;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.8);
-            transition: all 0.3s ease;
-        }
-
-        .form-file:hover::before {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .form-file:active::before {
-            background: rgba(255, 255, 255, 0.2);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create New Post - Admin Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * {margin: 0; padding: 0; box-sizing: border-box;}
+  body {background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh;}
+  .admin-container {max-width: 900px; margin: 40px auto; background: rgba(23,25,35,0.9); border-radius: 16px; overflow: hidden; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);}
+  .admin-header {padding: 30px 40px 20px; background: rgba(30,33,48,0.8); border-bottom: 1px solid rgba(255,255,255,0.1);}
+  .admin-title {font-size: 2.2rem; font-weight: 700; background: linear-gradient(90deg, #8e44ad, #9b59b6); -webkit-background-clip: text; background-clip: text; color: #FFD700; margin-bottom: 8px;}
+  .admin-subtitle {color: rgba(255,255,255,0.7); font-size: 1rem; font-weight: 400;}
+  .admin-content {padding: 30px 40px 40px;}
+  .status-message {padding: 12px 16px; border-radius: 8px; margin-bottom: 25px; font-weight: 500; display: none;}
+  .status-success {background: rgba(46,204,113,0.2); border: 1px solid rgba(46,204,113,0.4); color: #2ecc71;}
+  .status-error {background: rgba(231,76,60,0.2); border: 1px solid rgba(231,76,60,0.4); color: #e74c3c;}
+  .form-group {margin-bottom: 30px;}
+  .form-label {display: flex; align-items: center; margin-bottom: 12px; font-weight: 600; color: #fff; font-size: 1rem;}
+  .form-label i {margin-right: 10px; color: #9b59b6; width: 20px; text-align: center;}
+  .form-input, .form-textarea, .form-file {width: 100%; padding: 14px 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #fff; font-size: 1rem; font-family: 'Inter', sans-serif;}
+  .form-input:focus, .form-textarea:focus {border-color: #8e44ad; outline: none; background: rgba(255,255,255,0.08); box-shadow: 0 0 0 3px rgba(142,68,173,0.2);}
+  .form-textarea {min-height: 200px; resize: vertical; line-height: 1.6;}
+  .form-file {padding: 12px; cursor: pointer;}
+  .file-info {display: block; margin-top: 8px; font-size: 0.85rem; color: rgba(255,255,255,0.6);}
+  .selected-media {background: rgba(255,255,255,0.03); border-radius: 10px; padding: 20px; margin-bottom: 15px; border: 1px dashed rgba(255,255,255,0.1);}
+  .selected-media p {margin-bottom: 15px; font-weight: 500; color: rgba(255,255,255,0.8);}
+  #mediaList {display: flex; flex-direction: column; gap: 15px;}
+  .media-item {display: flex; flex-direction: column; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; position: relative;}
+  .media-item img, .media-item video {max-width: 100%; max-height: 250px; border-radius: 6px;}
+  .remove-media-btn {position: absolute; top: 8px; right: 8px; background: rgba(231,76,60,0.2); border: 1px solid rgba(231,76,60,0.3); color: #e74c3c; padding: 6px 10px; border-radius: 6px; cursor: pointer;}
+  .form-actions {display: flex; justify-content: space-between; align-items: center; margin-top: 35px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);}
+  .btn {padding: 14px 28px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; display: flex; align-items: center; gap: 10px; font-size: 1rem;}
+  .btn-primary {background: linear-gradient(135deg, #8e44ad, #9b59b6); color: white; box-shadow: 0 4px 15px rgba(142,68,173,0.3);}
+  .btn-primary:hover {transform: translateY(-2px); box-shadow: 0 6px 20px rgba(142,68,173,0.4);}
+  .btn-secondary {background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.1);}
+  .back-link {color: rgba(255,255,255,0.7); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 500;}
+  .character-count {text-align: right; margin-top: 5px; font-size: 0.85rem; color: rgba(255,255,255,0.5);}
+  @media (max-width: 768px){.form-actions{flex-direction:column;gap:15px;}.btn{width:100%;justify-content:center;}}
+</style>
 </head>
 <body>
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1 class="admin-title">Create New Post</h1>
-            <p class="admin-subtitle">Craft engaging content for your audience</p>
+<div class="admin-container">
+  <div class="admin-header">
+    <h1 class="admin-title">Create New Post</h1>
+    <p class="admin-subtitle">Craft engaging content for your audience</p>
+  </div>
+  <div class="admin-content">
+    <div class="status-message" id="statusMessage"></div>
+    <form method="POST" action="/admin/add-post" enctype="multipart/form-data" id="postForm">
+      <input type="hidden" id="mediaRemoved" name="mediaRemoved" value="false">
+
+      <!-- Post Title -->
+      <div class="form-group">
+        <label for="title" class="form-label"><i class="fas fa-heading"></i> Post Title</label>
+        <input type="text" id="title" name="title" class="form-input" placeholder="Enter a compelling title..." required maxlength="120">
+        <div class="character-count"><span id="titleCount">0</span>/120 characters</div>
+      </div>
+
+      <!-- Featured Media -->
+      <div class="form-group">
+        <label for="featuredMedia" class="form-label"><i class="fas fa-image"></i> Featured Media</label>
+        <div class="selected-media" id="selectedMedia" style="display:none;">
+          <p>Selected Media:</p>
+          <div id="mediaList"></div>
         </div>
-        
-        <div class="admin-content">
-            <div class="status-message" id="statusMessage"></div>
-            
-            <form method="POST" action="/admin/add-post" enctype="multipart/form-data" id="postForm">
-                <!-- Hidden field to track media removal -->
-                <input type="hidden" id="mediaRemoved" name="mediaRemoved" value="false">
-                
-                <div class="form-group">
-                    <label for="title" class="form-label">
-                        <i class="fas fa-heading"></i> Post Title
-                    </label>
-                    <input type="text" id="title" name="title" class="form-input" placeholder="Enter a compelling title..." required maxlength="120">
-                    <div class="character-count"><span id="titleCount">0</span>/120 characters</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="featuredMedia" class="form-label">
-                        <i class="fas fa-image"></i> Featured Media
-                    </label>
-                    
-                    <!-- Selected media display -->
-                    <div class="selected-media" id="selectedMedia" style="display: none;">
-                        <p>Selected media:</p>
-                        <div id="mediaElementContainer"></div>
-                        
-                        <div class="media-actions">
-                            <button type="button" class="remove-media-btn" id="removeMediaBtn">
-                                <i class="fas fa-trash"></i> Remove Media
-                            </button>
-                            <button type="button" class="btn-warning" id="restoreMediaBtn" style="display: none;">
-                                <i class="fas fa-undo"></i> Choose Different File
-                            </button>
-                        </div>
-                        <div id="mediaRemovedMessage" class="media-removed-message" style="display: none;">
-                            <i class="fas fa-exclamation-circle"></i> Media will not be included with this post
-                        </div>
-                    </div>
-                    
-                    <div id="noMediaMessage" class="no-media-message">
-                        <i class="fas fa-cloud-upload-alt"></i> No media selected
-                    </div>
-                    
-                    <div style="margin-top: 15px;">
-                        <input type="file" id="featuredMedia" name="featuredMedia" class="form-file" accept="image/*,video/*">
-                        <span class="file-info">Supported formats: JPEG, PNG, GIF, MP4, MOV, AVI, WebM (Max 50MB)</span>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="body" class="form-label">
-                        <i class="fas fa-align-left"></i> Content
-                    </label>
-                    <textarea id="body" name="body" class="form-textarea" placeholder="Write your post content here..." required></textarea>
-                    <div class="character-count"><span id="bodyCount">0</span> characters</div>
-                </div>
-                
-                <div class="form-actions">
-                    <div>
-                        <a href="/admin/dashboard" class="back-link">
-                            <i class="fas fa-arrow-left"></i> Back to Dashboard
-                        </a>
-                    </div>
-                    <div style="display: flex; gap: 12px;">
-                        <a href="/admin/dashboard" class="btn btn-secondary">
-                            <i class="fas fa-times"></i> Cancel
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-plus-circle"></i> Create Post
-                        </button>
-                    </div>
-                </div>
-            </form>
+        <input type="file" id="featuredMedia" name="featuredMedia" class="form-file" accept="image/*,video/*" multiple>
+        <span class="file-info">Supported: JPEG, PNG, GIF, MP4, MOV, AVI, WebM (Max 50MB each)</span>
+      </div>
+
+      <!-- Post Body -->
+      <div class="form-group">
+        <label for="body" class="form-label"><i class="fas fa-align-left"></i> Content</label>
+        <textarea id="body" name="body" class="form-textarea" placeholder="Write your post content here..." required></textarea>
+        <div class="character-count"><span id="bodyCount">0</span> characters</div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <a href="/admin/dashboard" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        <div style="display:flex;gap:12px;">
+          <a href="/admin/dashboard" class="btn btn-secondary"><i class="fas fa-times"></i> Cancel</a>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Create Post</button>
         </div>
-    </div>
+      </div>
+    </form>
+  </div>
+</div>
 
-    <script>
-        // Character counters
-        const titleInput = document.getElementById('title');
-        const bodyTextarea = document.getElementById('body');
-        const titleCount = document.getElementById('titleCount');
-        const bodyCount = document.getElementById('bodyCount');
+<script>
+const titleInput = document.getElementById('title');
+const bodyTextarea = document.getElementById('body');
+const titleCount = document.getElementById('titleCount');
+const bodyCount = document.getElementById('bodyCount');
+const fileInput = document.getElementById('featuredMedia');
+const selectedMedia = document.getElementById('selectedMedia');
+const mediaList = document.getElementById('mediaList');
+const mediaRemovedInput = document.getElementById('mediaRemoved');
 
-        titleInput.addEventListener('input', function() {
-            titleCount.textContent = this.value.length;
-        });
+// Character counters
+titleInput.addEventListener('input', () => titleCount.textContent = titleInput.value.length);
+bodyTextarea.addEventListener('input', () => bodyCount.textContent = bodyTextarea.value.length);
 
-        bodyTextarea.addEventListener('input', function() {
-            bodyCount.textContent = this.value.length;
-        });
+// Handle file selection
+fileInput.addEventListener('change', (e) => {
+  const files = Array.from(e.target.files);
+  if (!files.length) { selectedMedia.style.display='none'; mediaList.innerHTML=''; return; }
+  selectedMedia.style.display='block';
+  mediaList.innerHTML='';
+  files.forEach((file,index)=>{
+    if(file.size > 50*1024*1024){ alert('Max file size 50MB'); return; }
+    const item = document.createElement('div'); item.className='media-item';
+    const removeBtn = document.createElement('button'); removeBtn.className='remove-media-btn'; removeBtn.innerHTML='<i class="fas fa-trash"></i>'; 
+    removeBtn.onclick = ()=>{ files.splice(index,1); item.remove(); if(!files.length) selectedMedia.style.display='none'; fileInput.value=''; };
+    item.appendChild(removeBtn);
+    if(file.type.startsWith('image/')) { const img=document.createElement('img'); img.src=URL.createObjectURL(file); item.appendChild(img);}
+    else if(file.type.startsWith('video/')) { const vid=document.createElement('video'); vid.src=URL.createObjectURL(file); vid.controls=true; item.appendChild(vid);}
+    const name = document.createElement('div'); name.textContent=`${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`; item.appendChild(name);
+    mediaList.appendChild(item);
+  });
+});
 
-        // File selection functionality
-        document.getElementById('featuredMedia').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const selectedMedia = document.getElementById('selectedMedia');
-            const noMediaMessage = document.getElementById('noMediaMessage');
-            const mediaElementContainer = document.getElementById('mediaElementContainer');
-            const mediaRemovedInput = document.getElementById('mediaRemoved');
-            
-            if (file) {
-                // Validate file size (max 50MB)
-                const maxSize = 50 * 1024 * 1024; // 50MB in bytes
-                if (file.size > maxSize) {
-                    alert('File size exceeds 50MB limit. Please choose a smaller file.');
-                    this.value = '';
-                    return;
-                }
-                
-                // Hide "no media" message and show selected media section
-                noMediaMessage.style.display = 'none';
-                selectedMedia.style.display = 'block';
-                selectedMedia.classList.remove('media-removed');
-                mediaRemovedInput.value = 'false';
-                
-                // Clear previous content
-                mediaElementContainer.innerHTML = '';
-                
-                // Create and append the appropriate media element
-                if (file.type.startsWith('image/')) {
-                    const img = document.createElement('img');
-                    img.src = URL.createObjectURL(file);
-                    img.alt = 'Selected image';
-                    mediaElementContainer.appendChild(img);
-                } else if (file.type.startsWith('video/')) {
-                    const video = document.createElement('video');
-                    video.src = URL.createObjectURL(file);
-                    video.controls = true;
-                    video.style.maxWidth = '100%';
-                    mediaElementContainer.appendChild(video);
-                }
-                
-                // Show file name
-                const fileName = document.createElement('div');
-                fileName.className = 'file-name';
-                fileName.innerHTML = `<i class="fas fa-file"></i> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-                mediaElementContainer.appendChild(fileName);
-                
-                // Reset removal state
-                document.getElementById('removeMediaBtn').style.display = 'flex';
-                document.getElementById('restoreMediaBtn').style.display = 'none';
-                document.getElementById('mediaRemovedMessage').style.display = 'none';
-            } else {
-                // No file selected
-                selectedMedia.style.display = 'none';
-                noMediaMessage.style.display = 'block';
-                mediaRemovedInput.value = 'false';
-            }
-        });
+// Form submission spinner
+document.getElementById('postForm').addEventListener('submit', function(e){
+  const btn = this.querySelector('button[type="submit"]');
+  btn.innerHTML='<i class="fas fa-spinner"></i> Creating...'; btn.disabled=true;
+  setTimeout(()=>{ if(btn.disabled){ btn.innerHTML='<i class="fas fa-plus-circle"></i> Create Post'; btn.disabled=false;} },5000);
+});
 
-        // Media removal functionality
-        const removeMediaBtn = document.getElementById('removeMediaBtn');
-        const restoreMediaBtn = document.getElementById('restoreMediaBtn');
-        const mediaRemovedMessage = document.getElementById('mediaRemovedMessage');
-        const selectedMedia = document.getElementById('selectedMedia');
-        const fileInput = document.getElementById('featuredMedia');
-        const mediaRemovedInput = document.getElementById('mediaRemoved');
-        
-        removeMediaBtn.addEventListener('click', function() {
-            selectedMedia.classList.add('media-removed');
-            mediaRemovedInput.value = 'true';
-            removeMediaBtn.style.display = 'none';
-            restoreMediaBtn.style.display = 'flex';
-            mediaRemovedMessage.style.display = 'block';
-        });
-        
-        restoreMediaBtn.addEventListener('click', function() {
-            // Reset the file input and show file picker
-            fileInput.value = '';
-            fileInput.click();
-        });
-
-        // Form submission handling
-        document.getElementById('postForm').addEventListener('submit', function(e) {
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            
-            submitBtn.innerHTML = '<i class="fas fa-spinner"></i> Creating...';
-            submitBtn.disabled = true;
-            
-            // Re-enable after 5 seconds if still on page (form submission failed)
-            setTimeout(() => {
-                if (submitBtn.disabled) {
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                }
-            }, 5000);
-        });
-        
-        // Show status message if present in URL parameters
-        window.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const status = urlParams.get('status');
-            const message = urlParams.get('message');
-            
-            if (status && message) {
-                const statusElement = document.getElementById('statusMessage');
-                statusElement.textContent = message;
-                statusElement.className = `status-message status-${status}`;
-                statusElement.style.display = 'block';
-                
-                // Remove parameters from URL without reloading
-                window.history.replaceState({}, document.title, window.location.pathname);
-                
-                // Auto-hide success messages after 5 seconds
-                if (status === 'success') {
-                    setTimeout(() => {
-                        statusElement.style.display = 'none';
-                    }, 5000);
-                }
-            }
-            
-            // Initialize character counts
-            titleCount.textContent = titleInput.value.length;
-            bodyCount.textContent = bodyTextarea.value.length;
-        });
-    </script>
+// Status messages from URL
+window.addEventListener('DOMContentLoaded',()=>{
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get('status'); const message=params.get('message');
+  if(status && message){
+    const el=document.getElementById('statusMessage');
+    el.textContent=message; el.className=`status-message status-${status}`; el.style.display='block';
+    if(status==='success') setTimeout(()=>{ el.style.display='none'; },5000);
+    history.replaceState({},document.title,window.location.pathname);
+  }
+  titleCount.textContent = titleInput.value.length;
+  bodyCount.textContent = bodyTextarea.value.length;
+});
+</script>
 </body>
 </html>
