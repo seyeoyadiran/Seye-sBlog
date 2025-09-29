@@ -7,9 +7,7 @@ const mongoURI = process.env.MONGODB_URI;
 
 async function startServer() {
   try {
-    if (!mongoURI) {
-      throw new Error("❌ No MONGODB_URI found in environment variables");
-    }
+    if (!mongoURI) throw new Error("❌ No MONGODB_URI found in environment variables");
 
     await mongoose.connect(mongoURI, {
       tls: true,
