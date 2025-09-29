@@ -4,10 +4,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const methodOverride = require('method-override');
 const session = require('express-session');
-const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
 const expressLayouts = require("express-ejs-layouts");
-const serverless = require('serverless-http');
 
 const { isActiveRoute } = require('./server/helpers/routeHelpers');
 const adminRoutes = require('./server/routes/admin');
@@ -17,22 +15,6 @@ const app = express();
 
 // ======= FAVICON HANDLER =======
 app.get('/favicon.ico', (req, res) => res.status(204).end());
-
-// ======= SERVERLESS-SAFE MONGODB =======
-let cached = global.mongoose;
-if (!cached) cached = global.mongoose = { conn: null, promise: null };
-
-async function connectDB(uri) {
-  if (cached.conn) return cached.conn;
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(uri, {
-      tls: true,
-      serverSelectionTimeoutMS: 30000,
-    }).then(m => m);
-  }
-  cached.conn = await cached.promise;
-  return cached.conn;
-}
 
 // ======= MIDDLEWARE =======
 app.use(express.urlencoded({ extended: true }));
@@ -57,7 +39,7 @@ app.use(
           ttl: 14 * 24 * 60 * 60, // 14 days
           autoRemove: 'native',
         })
-      : undefined, // fallback is in-memory if no DB
+      : undefined, // fallback to in-memory if no DB
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: process.env.NODE_ENV === 'production',
@@ -99,13 +81,8 @@ app.use('/', mainRoutes);
 app.use('/admin', adminRoutes);
 
 // ======= HEALTH CHECK =======
-app.get('/health', async (req, res) => {
-  try {
-    await connectDB(mongoURI);
-    res.status(200).json({ status: 'OK', database: 'connected' });
-  } catch (err) {
-    res.status(500).json({ status: 'error', error: err.message });
-  }
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK' });
 });
 
 // ======= 404 HANDLER =======
@@ -129,26 +106,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ======= SERVERLESS EXPORT =======
-module.exports.handler = serverless(app);
-
-// ======= LOCAL DEV SERVER =======
-if (require.main === module) {
-  const PORT = process.env.PORT || 5000;
-
-  if (!mongoURI) {
-    console.error("❌ No MONGODB_URI found in environment variables");
-    process.exit(1);
-  }
-
-  connectDB(mongoURI)
-    .then(() => {
-      app.listen(PORT, () => {
-        console.log(`🚀 Server running locally at http://localhost:${PORT}`);
-      });
-    })
-    .catch(err => {
-      console.error("❌ Failed to connect to MongoDB:", err.message);
-      process.exit(1);
-    });
-}
+module.exports = app;
