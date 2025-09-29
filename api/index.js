@@ -1,4 +1,9 @@
-import serverless from 'serverless-http';
-import app from '../app.js';
+const serverless = require('serverless-http');
+const app = require('../app');
 
-export default serverless(app);
+// Export as a function that Vercel can use
+const handler = serverless(app);
+
+module.exports = (req, res) => {
+  return handler(req, res);
+};
