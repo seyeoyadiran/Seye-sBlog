@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The FitSocial Declaration — Seye Oyadiran</title>
+<style>
+  :root{
+    --ink:#05050a; --ink-2:#0b0b13;
+    --gold:#d9b45a; --gold-hi:#f6e3a8; --gold-dim:#8d7333;
+    --paper:#f4f0e6; --muted:#9c9689; --line:rgba(217,180,90,.22);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --sans:ui-sans-serif,-apple-system,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--serif);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:3;
+    background:radial-gradient(120% 80% at 50% 0%,rgba(217,180,90,.06),transparent 60%),
+               radial-gradient(100% 100% at 50% 100%,rgba(0,0,0,.7),transparent 55%);
+    mix-blend-mode:screen}
+  .grain{position:fixed;inset:-50%;z-index:2;pointer-events:none;opacity:.045;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>")}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;position:relative;z-index:4}
+  #notice{position:fixed;left:0;right:0;bottom:0;z-index:40;display:none;gap:16px;align-items:center;justify-content:center;
+    padding:14px 22px;background:rgba(8,7,4,.96);border-top:1px solid var(--line);font-family:var(--sans);font-size:13px;color:#e9e2d2}
+  #notice.on{display:flex;flex-wrap:wrap}
+  #notice b{color:var(--gold-hi);font-weight:600}
+  #notice button,.bake{font-family:var(--sans);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    background:linear-gradient(180deg,rgba(217,180,90,.22),rgba(217,180,90,.06));border:1px solid rgba(217,180,90,.55);
+    color:var(--gold-hi);padding:11px 18px;border-radius:2px;cursor:pointer}
+  #notice button:hover,.bake:hover{border-color:var(--gold);background:rgba(217,180,90,.28)}
+  .bake{margin-top:22px}
+  #tabs{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:35;display:flex;gap:4px;padding:5px;
+    border:1px solid var(--line);border-radius:999px;background:rgba(8,7,10,.84);backdrop-filter:blur(12px)}
+  #tabs button{font-family:var(--sans);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;background:none;border:0;
+    color:var(--muted);padding:10px 20px;border-radius:999px;cursor:pointer;transition:color .3s}
+  #tabs button:hover{color:#e9e2d2}
+  #tabs button.act{background:linear-gradient(180deg,rgba(217,180,90,.26),rgba(217,180,90,.08));color:var(--gold-hi)}
+  .grouphead{display:flex;align-items:center;gap:18px;margin:64px 0 8px}
+  .grouphead h3{margin:0}
+  .grouphead .ext{flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+  #bar{position:fixed;top:0;left:0;height:2px;width:0;z-index:30;background:linear-gradient(90deg,var(--gold-dim),var(--gold),var(--gold-hi))}
+
+  .kicker{font-family:var(--sans);font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);opacity:.85}
+  h1{font-size:clamp(44px,9vw,116px);line-height:.92;margin:.24em 0 .18em;font-weight:400;letter-spacing:-.02em;
+    background:linear-gradient(180deg,#fffaf0 0%,var(--gold-hi) 42%,var(--gold) 72%,var(--gold-dim) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  h2{font-size:clamp(30px,4.6vw,58px);line-height:1.02;margin:0 0 .1em;font-weight:400;letter-spacing:-.015em}
+  h3{font-family:var(--sans);font-size:13px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin:0 0 14px;font-weight:600}
+  p{font-size:clamp(17px,1.55vw,20px);line-height:1.72;color:#e7e1d4}
+  .lead{font-size:clamp(19px,2vw,25px);line-height:1.62;color:#f1ece0}
+  em{color:var(--gold-hi);font-style:italic}
+  .sm{font-family:var(--sans);font-size:13px;line-height:1.7;color:var(--muted)}
+
+  /* hero */
+  header.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:96px 0 64px;position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:0;opacity:1}
+  .hero-bg svg,.hero-bg img{width:100%;height:100%;object-fit:cover;display:block}
+  .hero-bg img{position:absolute;inset:0;opacity:0;transition:opacity 1.4s ease}
+  .hero-bg img.on{opacity:.62}
+  .hero-veil{position:absolute;inset:0;z-index:1;background:
+    linear-gradient(90deg,rgba(5,5,10,.94) 0%,rgba(5,5,10,.62) 46%,rgba(5,5,10,.18) 100%),
+    linear-gradient(0deg,rgba(5,5,10,.92),rgba(5,5,10,.08) 60%)}
+  .crest{width:64px;height:64px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;margin-bottom:34px;
+    background:radial-gradient(circle at 50% 30%,rgba(217,180,90,.20),transparent 70%)}
+  .crest span{font-family:var(--sans);font-size:15px;letter-spacing:.06em;color:var(--gold-hi);font-weight:700}
+  .rule{height:1px;background:linear-gradient(90deg,var(--gold),rgba(217,180,90,0));margin:34px 0 26px;max-width:520px}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:34px;margin-top:40px}
+  .hero-meta div{min-width:150px}
+  .hero-meta .k{font-family:var(--sans);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:7px}
+  .hero-meta .v{font-size:17px;color:#efe9dc}
+  .scrollcue{position:absolute;bottom:34px;left:28px;z-index:4;font-family:var(--sans);font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:12px}
+  .scrollcue i{display:block;width:44px;height:1px;background:var(--gold-dim);animation:slide 2.6s ease-in-out infinite}
+  @keyframes slide{0%,100%{transform:scaleX(.35);transform-origin:left}50%{transform:scaleX(1);transform-origin:left}}
+
+  section{padding:clamp(72px,10vw,132px) 0;border-top:1px solid rgba(255,255,255,.05)}
+  .sec-head{display:flex;align-items:baseline;gap:22px;margin-bottom:38px;flex-wrap:wrap}
+  .numeral{font-family:var(--sans);font-size:11px;letter-spacing:.3em;color:var(--gold-dim);border:1px solid var(--line);padding:7px 12px;border-radius:2px;white-space:nowrap}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);align-items:start}
+  @media(max-width:860px){.cols{grid-template-columns:1fr}}
+
+  ol.decl{list-style:none;counter-reset:d;padding:0;margin:0}
+  ol.decl li{counter-increment:d;position:relative;padding:22px 0 22px 66px;border-bottom:1px solid rgba(255,255,255,.06);
+    font-size:clamp(17px,1.7vw,21px);line-height:1.6;color:#eee8db;opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+  ol.decl li.in{opacity:1;transform:none}
+  ol.decl li::before{content:counter(d,decimal-leading-zero);position:absolute;left:0;top:26px;font-family:var(--sans);font-size:11px;letter-spacing:.16em;color:var(--gold);opacity:.75}
+  ol.decl li b{color:#fff;font-weight:600}
+  ol.decl li .whisper{display:block;margin-top:8px;font-family:var(--sans);font-size:13px;color:var(--muted);line-height:1.6}
+
+  .band{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.07);margin-top:52px}
+  .band div{background:var(--ink-2);padding:30px 22px}
+  .band .n{font-size:clamp(28px,3.6vw,44px);color:var(--gold-hi);line-height:1}
+  .band .l{font-family:var(--sans);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:12px}
+  @media(max-width:760px){.band{grid-template-columns:repeat(2,1fr)}}
+
+  .cities{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+  .city{font-family:var(--sans);font-size:12px;letter-spacing:.18em;text-transform:uppercase;border:1px solid var(--line);color:#e9e2d2;padding:11px 16px;border-radius:2px;background:linear-gradient(180deg,rgba(217,180,90,.07),transparent)}
+  .city.flag{border-color:rgba(217,180,90,.55);color:var(--gold-hi)}
+
+  /* ---------- plates ---------- */
+  .board{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:44px}
+  .plate{position:relative;border:1px solid var(--line);border-radius:3px;overflow:hidden;cursor:zoom-in;background:var(--ink-2);
+    display:flex;flex-direction:column;justify-content:flex-end;min-height:230px;transition:border-color .35s ease,transform .45s ease}
+  .plate:hover{border-color:rgba(217,180,90,.6);transform:translateY(-3px)}
+  .plate .art,.plate .ph{position:absolute;inset:0;width:100%;height:100%}
+  .art svg{width:100%;height:100%;display:block;filter:brightness(1.85) saturate(1.15)}
+  .plate .ph{object-fit:cover;opacity:0;transition:opacity 1.1s ease;filter:saturate(.92) contrast(1.04) brightness(.97)}
+  .plate .ph.on{opacity:1}
+  .plate .scrim{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.34) 34%,rgba(0,0,0,0) 62%)}
+  .plate .frame{position:absolute;inset:12px;border:1px solid rgba(255,255,255,.08);pointer-events:none}
+  .plate .cap{position:relative;padding:22px;z-index:2}
+  .plate .cap .t{font-size:20px;color:#fff;line-height:1.2}
+  .plate .cap .s{font-family:var(--sans);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:8px}
+  .plate .up{position:absolute;top:12px;right:12px;z-index:5;width:30px;height:30px;border:1px solid var(--line);border-radius:50%;
+    background:rgba(5,5,10,.6);color:var(--gold);font-family:var(--sans);font-size:15px;line-height:28px;text-align:center;cursor:pointer;opacity:0;transition:opacity .3s}
+  .plate:hover .up{opacity:1}
+  .plate .up:hover{border-color:var(--gold);color:var(--gold-hi)}
+  .s-12{grid-column:span 12;min-height:400px}
+  .s-8{grid-column:span 8;min-height:330px}
+  .s-6{grid-column:span 6;min-height:290px}
+  .s-4{grid-column:span 4;min-height:250px}
+  .s-3{grid-column:span 3;min-height:230px}
+  @media(max-width:980px){.s-8,.s-6{grid-column:span 12}.s-4,.s-3{grid-column:span 6}}
+  @media(max-width:620px){.s-4,.s-3{grid-column:span 12}}
+
+  /* gallery */
+  .gal{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-top:40px}
+  .gal .plate{min-height:250px}
+  .g-6{grid-column:span 6;min-height:320px!important}
+  .g-4{grid-column:span 4}
+  .g-3{grid-column:span 3}
+  @media(max-width:980px){.g-6{grid-column:span 12}.g-4,.g-3{grid-column:span 6}}
+  @media(max-width:620px){.g-4,.g-3{grid-column:span 12}}
+  .galnote{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);padding:16px 20px;margin-top:26px;background:linear-gradient(180deg,rgba(217,180,90,.05),transparent)}
+  .galnote span{color:var(--gold)}
+
+  /* lightbox */
+  #lb{position:fixed;inset:0;z-index:60;background:rgba(3,3,8,.94);display:none;align-items:center;justify-content:center;padding:40px}
+  #lb.on{display:flex}
+  #lb .stagebox{position:relative;width:min(1200px,92vw);aspect-ratio:16/10;border:1px solid var(--line);overflow:hidden;background:var(--ink-2)}
+  #lb .stagebox>*{position:absolute;inset:0;width:100%;height:100%}
+  #lb .stagebox img{object-fit:cover}
+  #lb .stagebox svg{display:block}
+  #lb .meta{position:absolute;left:0;right:0;bottom:0;top:auto;height:auto;width:auto;padding:26px 30px;z-index:3;background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.45) 55%,transparent)}
+  #lb .meta .t{font-size:26px;color:#fff}
+  #lb .meta .s{font-family:var(--sans);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-top:8px}
+  #lb button{position:absolute;background:none;border:1px solid var(--line);color:var(--gold);width:46px;height:46px;border-radius:50%;cursor:pointer;font-size:18px;font-family:var(--sans);z-index:5}
+  #lb button:hover{border-color:var(--gold);color:var(--gold-hi)}
+  #lbPrev{left:2vw;top:50%;transform:translateY(-50%)}
+  #lbNext{right:2vw;top:50%;transform:translateY(-50%)}
+  #lbClose{right:2vw;top:3vh}
+
+  .pull{text-align:center;padding:clamp(56px,8vw,96px) 6%;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    background:radial-gradient(70% 120% at 50% 50%,rgba(217,180,90,.08),transparent 70%)}
+  .pull q{font-size:clamp(26px,4vw,50px);line-height:1.24;quotes:none;display:block;
+    background:linear-gradient(180deg,#fffaf0,var(--gold) 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .pull .attr{font-family:var(--sans);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-top:26px}
+
+  .sign{border:1px solid var(--line);padding:clamp(30px,5vw,58px);margin-top:20px;background:linear-gradient(180deg,rgba(217,180,90,.05),transparent)}
+  .sigline{display:flex;gap:44px;flex-wrap:wrap;margin-top:44px}
+  .sigline div{flex:1;min-width:220px}
+  .sigline .ln{height:1px;background:var(--gold-dim);margin-bottom:10px}
+  .sigline .lb{font-family:var(--sans);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted)}
+  .script{font-size:34px;color:var(--gold-hi);font-style:italic;padding-bottom:8px}
+  footer{padding:60px 0 90px;text-align:center}
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  @media print{body{background:#fff;color:#111}.grain,#bar,.scrollcue,#lb{display:none}h1,.pull q{color:#8d7333;-webkit-text-fill-color:#8d7333}p,ol.decl li{color:#1b1b1b}section{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div id="bar"></div>
+<input type="file" id="picker" accept="image/*" hidden />
+
+<header class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-veil"></div>
+  <div class="wrap">
+    <div class="crest"><span>FS</span></div>
+    <div class="kicker">Written in faith · before the evidence</div>
+    <h1>The FitSocial<br/>Declaration</h1>
+    <div class="rule"></div>
+    <p class="lead" style="max-width:720px">
+      This is not a forecast. It is a record of what God is doing through FitSocial,
+      written down early so that when it arrives, no one — including me — can call it luck.
+    </p>
+    <div class="hero-meta">
+      <div><div class="k">Written by</div><div class="v">Seye Oyadiran</div></div>
+      <div><div class="k">Role</div><div class="v">Founder, FitSocial</div></div>
+      <div><div class="k">Date signed</div><div class="v">July 27, 2026</div></div>
+      <div><div class="k">Status</div><div class="v">Already done in the spirit</div></div>
+    </div>
+  </div>
+  <div class="scrollcue"><i></i> Read it out loud</div>
+</header>
+
+<nav id="tabs">
+  <button class="act" data-view="decl">The Declaration</button>
+  <button data-view="life">The Lifestyle</button>
+</nav>
+
+<main id="view-decl">
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="numeral">Preamble</span><h2>Why I wrote this down</h2></div>
+    <div class="cols">
+      <div>
+        <p>Faith that only makes sense after the fact isn't faith. So I am writing the whole thing down
+          <em>now</em> — while the numbers are small, while the office is wherever I open my laptop, while
+          most people still have to ask what FitSocial is.</p>
+        <p>Every line below is written in the present tense on purpose. Not "I hope." Not "one day."
+          <em>This is what is happening.</em> My job is to move like it's already true, work like it depends on me,
+          and pray like it depends on God — because it does.</p>
+      </div>
+      <div>
+        <p>I am building a company that makes the world healthier. Physically, mentally, socially. That is the
+          assignment. The buildings, the money, the recognition — those are the receipts, not the reason.</p>
+        <p>I will read this until it stops sounding crazy to me. Then I will read it until it stops sounding
+          crazy to everyone else.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="numeral">I</span><h2>The Mission</h2></div>
+    <h3>What FitSocial is on this earth to do</h3>
+    <ol class="decl">
+      <li><b>FitSocial is the #1 app in the App Store for Health &amp; Fitness</b> — not for a day of hype, but held, defended, and earned by being the one people actually keep on their home screen.
+        <span class="whisper">Number one because it works. The ranking is a byproduct of the transformation.</span></li>
+      <li><b>Millions of lives are measurably transformed</b> — weight lost, sickness reversed, confidence rebuilt, depression lifted, families changed because one person in the house got healthy first.</li>
+      <li><b>Millions of monthly paying subscribers worldwide</b> — people who gladly pay because FitSocial gave them back their body, their energy, and their years.</li>
+      <li><b>FitSocial makes fitness social again</b> — no one does the hard thing alone. The app turns strangers into training partners and training partners into lifelong friends.</li>
+      <li><b>We are profitable, abundant, and growing year over year</b> — a business so healthy it never has to compromise the mission to survive.</li>
+      <li><b>We do good in the world, on purpose</b> — free access where it's needed, health brought to communities that were written off, and a company people are proud to be associated with.</li>
+    </ol>
+    <div class="band reveal">
+      <div><div class="n">#1</div><div class="l">App Store · Health &amp; Fitness</div></div>
+      <div><div class="n">Millions</div><div class="l">Lives transformed</div></div>
+      <div><div class="n">Millions</div><div class="l">Paying subscribers</div></div>
+      <div><div class="n">Global</div><div class="l">Every continent we can reach</div></div>
+    </div>
+    <div class="board" data-plates="mission"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="numeral">II</span><h2>The Houses We Build</h2></div>
+    <h3>Offices worldwide · state of the art</h3>
+    <p style="max-width:820px">FitSocial has offices on multiple continents — buildings that feel like the future, designed so that the
+      people inside them do the best work of their lives. Light, air, space, beauty. No one walks into a FitSocial building and thinks small.</p>
+    <div class="cities">
+      <span class="city flag">New York</span><span class="city">Chicago</span><span class="city">Los Angeles</span>
+      <span class="city flag">Cincinnati</span><span class="city">Austin</span><span class="city">Miami</span>
+      <span class="city">London</span><span class="city">Paris</span><span class="city flag">Lagos</span>
+      <span class="city">Nairobi</span><span class="city">Dubai</span><span class="city">Tokyo</span>
+      <span class="city">Singapore</span><span class="city">Sydney</span>
+    </div>
+    <div class="board" data-plates="houses"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="numeral">III</span><h2>The Grounds</h2></div>
+    <h3>The FitSocial Club · a country club for everybody</h3>
+    <p style="max-width:860px">We build the greatest fitness campuses in the world — and we open the gates. A country club feeling
+      without the country club gate: elite trainers, real doctors, real food, real community, in multiple cities worldwide.</p>
+    <ol class="decl">
+      <li><b>Multiple sports, real fields</b> — basketball, football, soccer, track, tennis, pickleball, swimming. Places where grown men and women get to play again.</li>
+      <li><b>Elite coaches and trainers</b> — the caliber pros fly across the country for, available to the person who just decided to start.</li>
+      <li><b>On-site doctors, nurses, and recovery</b> — bloodwork, physical therapy, sauna, cold plunge, sleep and stress care. Health, not just exercise.</li>
+      <li><b>A food hall that makes eating well the easy choice</b> — food so good people come for the meal and stay for the workout.</li>
+      <li><b>Open to everybody</b> — the kid from the neighborhood and the CEO train in the same building. That is the whole point.</li>
+    </ol>
+    <div class="board" data-plates="grounds"></div>
+  </div>
+</section>
+
+<div class="pull reveal">
+  <div class="wrap"><q>If the vision doesn't scare me, it's too small to need God.</q>
+  <div class="attr">The rule I build by</div></div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="numeral">IV</span><h2>The People</h2></div>
+    <h3>The company everybody wants to work for</h3>
+    <ol class="decl">
+      <li><b>Our people are paid extraordinarily well</b> — salary, equity, health, time, and dignity. Nobody who builds this company has to worry about money at home.</li>
+      <li><b>FitSocial is a dream job</b> — the résumé line people are proud of forever, the place the best in the world quietly hope to get a call from.</li>
+      <li><b>Our team is healthy</b> — we would be frauds otherwise. The people building the health company live the health company.</li>
+      <li><b>Major sports leagues, brands, and institutions partner with us</b> — because we became the standard, not because we begged.</li>
+      <li><b>Leaders are grown here</b> — people leave FitSocial (rarely) as better builders, better spouses, better humans than they arrived.</li>
+    </ol>
+    <div class="board" data-plates="people"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="numeral">V</span><h2>The Man I Become</h2></div>
+    <h3>Character first · everything else follows</h3>
+    <ol class="decl">
+      <li><b>I am named to the Forbes 30 Under 30</b> — and the recognition changes nothing about how early I get up.</li>
+      <li><b>I become a billionaire</b> — a Black billionaire who opens doors on the way up and refuses to close them behind him.</li>
+      <li><b>I am a wealthy, healthy, prosperous man</b> — strong body, clear mind, settled spirit. I am the walking advertisement for what I sell.</li>
+      <li><b>I am an extraordinary speaker</b> — when I speak, rooms lean in. My energy changes the temperature of a place before I say a word.</li>
+      <li><b>I am the kind of man other men study</b> — how I lead, how I love my wife, how I keep my word. Men want to build what I've built and become what I've become.</li>
+      <li><b>My integrity is not for sale</b> — I am the same man in the boardroom, in my house, and when nobody is watching.</li>
+      <li><b>My circle is elite and real</b> — founders, CEOs, athletes, artists, and people operating at the top of their craft. Iron sharpens iron; I bring as much as I take.</li>
+      <li><b>I stay teachable</b> — I keep mentors, keep reading, keep asking better questions. Arrogance is the fastest way to lose everything on this page.</li>
+    </ol>
+    <div class="board" data-plates="man"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="numeral">VI</span><h2>The House of Oyadiran</h2></div>
+    <h3>The thing I refuse to sacrifice for the company</h3>
+    <div class="cols">
+      <div>
+        <p><em>Lajoie Divine King becomes Lajoie Divine Oyadiran.</em> We build a marriage that is happy, honest,
+          deeply loving, and unshakable — a partnership people point to and say <em>that's what I want.</em></p>
+        <p>We raise beautiful, healthy, brilliant children who know God, know their name, and know they were
+          wanted. They grow up watching a father who worked hard and still came home.</p>
+      </div>
+      <div>
+        <p>My wife never has to wonder if she chose right. My children never have to compete with my calendar
+          for my attention. Whatever I build out there, they get the best of me — not the leftovers.</p>
+        <p>I change the trajectory of the Oyadiran name. What was hard for the generations before me becomes
+          normal for the generations after me. My grandchildren inherit not just money but standards, faith, and a working machine.</p>
+      </div>
+    </div>
+    <div class="board" data-plates="house"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="numeral">VII</span><h2>The Legacy</h2></div>
+    <h3>What is still standing when I'm gone</h3>
+    <ol class="decl">
+      <li><b>FitSocial outlives me, my children, and my grandchildren</b> — built on systems and values, not on my personality.</li>
+      <li><b>The world is measurably healthier because this company existed</b> — that sentence is the only success metric that ultimately counts.</li>
+      <li><b>My family's name means something for generations</b> — trust, excellence, generosity, faith.</li>
+      <li><b>The wealth is a tool</b> — it funds churches, schools, gyms, scholarships, and families who never hear my name.</li>
+      <li><b>God gets the credit</b> — I never rewrite this story with myself as the source of it.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <div class="sec-head"><span class="numeral">Gallery</span><h2>The Vision Board</h2></div>
+    <h3>Twenty-four windows into the life already being built</h3>
+    <p style="max-width:820px">Click any frame to open it full size. Use the arrows to move through. Every frame is
+      also a slot — press the <span style="color:var(--gold)">＋</span> in the corner to drop in your own photo of the
+      exact building, club, car, or place you're believing for.</p>
+    <div class="gal" data-plates="gallery"></div>
+    <div class="galnote sm"><span>◆</span><div>Each frame carries original FitSocial line-art that always renders, with live photography
+      layered on top when you're online. Swap in your own images any time — that's what makes it <em>yours</em>.</div></div>
+    <button class="bake" id="bakeBtn">◆ Bake the photos into a permanent file</button>
+    <div class="sm" id="bakeMsg" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="numeral">VIII</span><h2>The Signature</h2></div>
+    <div class="sign">
+      <p class="lead" style="margin-top:0">I, Seye Oyadiran, declare that everything written above is not a wish list. It is an assignment I have
+        accepted. I will work for it with everything I have, I will pray for it with everything I believe, and I
+        will not shrink it to make anyone comfortable — including myself.</p>
+      <p class="sm">I will read this out loud. I will keep the receipts. I will date the day each line comes true.</p>
+      <div class="sigline">
+        <div><div class="script">Seye Oyadiran</div><div class="ln"></div><div class="lb">Founder, FitSocial</div></div>
+        <div><div class="script">July 27, 2026</div><div class="ln"></div><div class="lb">Date written in faith</div></div>
+        <div><div class="script">&nbsp;</div><div class="ln"></div><div class="lb">Date it came true</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<main id="view-life" hidden>
+<section style="border-top:none;padding-top:clamp(120px,14vw,180px)">
+  <div class="wrap">
+    <div class="sec-head"><span class="numeral">IX</span><h2>The Lifestyle</h2></div>
+    <h3>What abundance looks like when it arrives</h3>
+    <p style="max-width:840px">None of this is the mission — the mission is millions of healthier lives. But I serve a God of
+      abundance, not survival. This board is what <em>overflow</em> looks like: the homes, the garage, the places,
+      and the One who made all of it possible.</p>
+
+    <div class="grouphead"><h3>The Homes</h3><div class="ext"></div></div>
+    <div class="gal" data-plates="lifeHomes"></div>
+
+    <div class="grouphead"><h3>The Garage</h3><div class="ext"></div></div>
+    <div class="gal" data-plates="lifeCars"></div>
+
+    <div class="grouphead"><h3>The Passport</h3><div class="ext"></div></div>
+    <div class="gal" data-plates="lifeTravel"></div>
+
+    <div class="grouphead"><h3>The Foundation — God First</h3><div class="ext"></div></div>
+    <div class="gal" data-plates="lifeFaith"></div>
+  </div>
+</section>
+
+<div class="pull">
+  <div class="wrap">
+    <q>Write the vision; make it plain on tablets, so he may run who reads it.</q>
+    <div class="attr">Habakkuk 2:2 — the verse this whole page obeys</div>
+  </div>
+</div>
+</main>
+
+<footer><div class="wrap"><p class="sm" style="max-width:660px;margin:0 auto">
+  Photos you add live in this view only. Send them to Claude to bake them into the file permanently.
+</p></div></footer>
+
+<div id="notice">
+  <div><b>The photography isn't loading in this viewer.</b> Download this file and open it in your browser — every frame fills with real imagery.</div>
+  <button id="noticeX">Got it</button>
+</div>
+
+<div id="lb">
+  <button id="lbClose" aria-label="Close">✕</button>
+  <button id="lbPrev" aria-label="Previous">‹</button>
+  <button id="lbNext" aria-label="Next">›</button>
+  <div class="stagebox" id="lbStage"></div>
+</div>
+
+<script>
+/* Vision plate art library — self-contained SVG scenes, gold line-art on night.
+   Every scene: viewBox 0 0 1200 760. Deterministic (seeded) so layouts are stable. */
+const ART = (() => {
+  const G = 'rgba(217,180,90,';
+  const rnd = s => () => (s = (s * 16807) % 2147483647) / 2147483647;
+
+  const sky = (id, a, b) => `
+    <defs>
+      <linearGradient id="sky${id}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/>
+      </linearGradient>
+      <radialGradient id="glow${id}" cx=".5" cy=".78" r=".6">
+        <stop offset="0" stop-color="rgba(217,180,90,.30)"/><stop offset="1" stop-color="rgba(217,180,90,0)"/>
+      </radialGradient>
+      <linearGradient id="fade${id}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(0,0,0,.5)"/>
+      </linearGradient>
+    </defs>
+    <rect width="1200" height="760" fill="url(#sky${id})"/>
+    <ellipse cx="600" cy="600" rx="720" ry="300" fill="url(#glow${id})"/>`;
+
+  const stars = (r, n = 60) => {
+    let s = '';
+    for (let i = 0; i < n; i++) {
+      const x = r() * 1200, y = r() * 380, o = 0.15 + r() * 0.5, rr = r() * 1.4 + 0.4;
+      s += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${rr.toFixed(1)}" fill="${G}${o.toFixed(2)})"/>`;
+    }
+    return s;
+  };
+
+  const windows = (x, y, w, h, r, dens = .55, cell = 13) => {
+    let s = '';
+    for (let cx = x + 6; cx < x + w - 8; cx += cell)
+      for (let cy = y + 8; cy < y + h - 8; cy += cell + 4) {
+        if (r() > dens) continue;
+        s += `<rect x="${cx.toFixed(0)}" y="${cy.toFixed(0)}" width="5" height="7" fill="${G}${(0.25 + r() * 0.6).toFixed(2)})"/>`;
+      }
+    return s;
+  };
+
+  /* ---------- scenes ---------- */
+
+  const skyline = (seed, opts = {}) => {
+    const r = rnd(seed), base = 620, n = opts.n || 22;
+    let b = '', x = -20;
+    while (x < 1220) {
+      const w = 34 + r() * 78, h = 90 + Math.pow(r(), 1.6) * 400;
+      const y = base - h;
+      b += `<rect x="${x.toFixed(0)}" y="${y.toFixed(0)}" width="${w.toFixed(0)}" height="${h.toFixed(0)}" fill="#0a0a12" stroke="${G}.35)" stroke-width="1"/>`;
+      b += windows(x, y, w, h, r, .5);
+      if (r() > .75) b += `<line x1="${(x + w / 2).toFixed(0)}" y1="${y.toFixed(0)}" x2="${(x + w / 2).toFixed(0)}" y2="${(y - 30 - r() * 40).toFixed(0)}" stroke="${G}.5)" stroke-width="1.2"/>`;
+      x += w + 4 + r() * 10;
+    }
+    return `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#05050c', '#120d14')}${stars(r, 70)}
+      <circle cx="${opts.moonX || 940}" cy="150" r="52" fill="none" stroke="${G}.55)" stroke-width="1.2"/>
+      <circle cx="${opts.moonX || 940}" cy="150" r="52" fill="${G}.06)"/>
+      ${b}
+      <rect x="0" y="620" width="1200" height="140" fill="#04040a"/>
+      ${Array.from({length: 26}, (_, i) => `<line x1="${i * 48}" y1="${628 + (i % 3) * 8}" x2="${i * 48 + 26}" y2="${628 + (i % 3) * 8}" stroke="${G}.18)" stroke-width="2"/>`).join('')}
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+  };
+
+  const tower = seed => {
+    const r = rnd(seed);
+    let mull = '';
+    for (let i = 1; i < 16; i++) mull += `<line x1="${420 + i * 24}" y1="${150 + i * 1}" x2="${400 + i * 26}" y2="700" stroke="${G}.22)" stroke-width="1"/>`;
+    let bands = '';
+    for (let i = 0; i < 20; i++) bands += `<line x1="${418 - i * .6}" y1="${180 + i * 26}" x2="${790 + i * .6}" y2="${180 + i * 26}" stroke="${G}.16)" stroke-width="1"/>`;
+    return `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#05050c', '#151019')}${stars(r, 50)}
+      <path d="M470 120 L740 120 L800 700 L410 700 Z" fill="#0a0a13" stroke="${G}.5)" stroke-width="1.4"/>
+      ${bands}${mull}
+      ${windows(430, 160, 350, 520, r, .35, 22)}
+      <path d="M470 120 L605 60 L740 120 Z" fill="#0d0d17" stroke="${G}.6)" stroke-width="1.2"/>
+      <line x1="605" y1="60" x2="605" y2="10" stroke="${G}.65)" stroke-width="1.6"/>
+      <circle cx="605" cy="10" r="4" fill="${G}.9)"/>
+      <path d="M120 700 L300 380 L340 700 Z" fill="#08080f" stroke="${G}.25)"/>
+      <path d="M880 700 L960 420 L1090 700 Z" fill="#08080f" stroke="${G}.25)"/>
+      <rect x="0" y="700" width="1200" height="60" fill="#04040a"/>
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+  };
+
+  const officeInterior = seed => {
+    const r = rnd(seed);
+    let glass = '';
+    for (let i = 0; i <= 8; i++) glass += `<line x1="${60 + i * 135}" y1="60" x2="${60 + i * 135}" y2="470" stroke="${G}.28)"/>`;
+    let desks = '';
+    for (let row = 0; row < 3; row++) {
+      const y = 520 + row * 70, w = 220 + row * 90, x = 600 - w / 2;
+      desks += `<rect x="${x}" y="${y}" width="${w}" height="${16 + row * 5}" rx="4" fill="#0c0c15" stroke="${G}.4)"/>`;
+      desks += `<rect x="${x + 30}" y="${y - 26 - row * 4}" width="${46 + row * 10}" height="${24 + row * 5}" rx="2" fill="none" stroke="${G}.45)"/>`;
+      desks += `<rect x="${x + w - 80 - row * 10}" y="${y - 26 - row * 4}" width="${46 + row * 10}" height="${24 + row * 5}" rx="2" fill="none" stroke="${G}.45)"/>`;
+    }
+    return `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#070710', '#100c14')}
+      <rect x="60" y="60" width="1080" height="410" fill="#06060e" stroke="${G}.4)"/>
+      ${glass}
+      <line x1="60" y1="240" x2="1140" y2="240" stroke="${G}.2)"/>
+      ${Array.from({length: 30}, (_, i) => `<rect x="${80 + i * 36}" y="${300 + (i % 5) * 22}" width="14" height="${40 + (i % 4) * 30}" fill="${G}${(.08 + (i % 4) * .04).toFixed(2)})"/>`).join('')}
+      ${Array.from({length: 5}, (_, i) => `<line x1="${200 + i * 200}" y1="60" x2="${200 + i * 200}" y2="120" stroke="${G}.35)"/><ellipse cx="${200 + i * 200}" cy="124" rx="36" ry="5" fill="${G}.35)"/>`).join('')}
+      ${desks}
+      <path d="M120 700 q30 -70 60 0 z" fill="none" stroke="${G}.4)"/>
+      <path d="M1050 700 q34 -80 68 0 z" fill="none" stroke="${G}.4)"/>
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+  };
+
+  const gym = seed => {
+    const r = rnd(seed);
+    let racks = '';
+    for (let i = 0; i < 4; i++) {
+      const x = 120 + i * 260;
+      racks += `<rect x="${x}" y="330" width="10" height="250" fill="${G}.5)"/><rect x="${x + 130}" y="330" width="10" height="250" fill="${G}.5)"/>
+      <rect x="${x}" y="330" width="140" height="8" fill="${G}.6)"/>
+      <line x1="${x - 20}" y1="390" x2="${x + 160}" y2="390" stroke="${G}.55)" stroke-width="4"/>
+      <circle cx="${x - 20}" cy="390" r="20" fill="none" stroke="${G}.6)" stroke-width="5"/>
+      <circle cx="${x + 160}" cy="390" r="20" fill="none" stroke="${G}.6)" stroke-width="5"/>`;
+    }
+    return `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#06060e', '#120e15')}
+      <rect x="0" y="40" width="1200" height="300" fill="#05050d"/>
+      ${Array.from({length: 9}, (_, i) => `<line x1="${i * 150}" y1="40" x2="${i * 150}" y2="340" stroke="${G}.22)"/>`).join('')}
+      <line x1="0" y1="190" x2="1200" y2="190" stroke="${G}.18)"/>
+      ${stars(r, 26)}
+      ${Array.from({length: 6}, (_, i) => `<line x1="${100 + i * 200}" y1="0" x2="${100 + i * 200}" y2="70" stroke="${G}.3)"/><path d="M${70 + i * 200} 70 h60 l-10 22 h-40 z" fill="${G}.25)" stroke="${G}.5)"/>`).join('')}
+      ${racks}
+      <rect x="0" y="580" width="1200" height="180" fill="#07070f"/>
+      ${Array.from({length: 14}, (_, i) => `<line x1="${i * 90}" y1="580" x2="${i * 90 - 60}" y2="760" stroke="${G}.12)"/>`).join('')}
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+  };
+
+  const court = seed => `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#06060e', '#0f0b12')}
+      ${Array.from({length: 4}, (_, i) => `<line x1="${180 + i * 280}" y1="0" x2="${180 + i * 280}" y2="90" stroke="${G}.3)"/><path d="M${150 + i * 280} 90 h60 l-8 20 h-44 z" fill="${G}.3)"/><path d="M${180 + i * 280} 110 L${60 + i * 300} 700 L${300 + i * 300} 700 Z" fill="${G}.035)"/>`).join('')}
+      <path d="M330 300 L870 300 L1140 700 L60 700 Z" fill="#0a0a13" stroke="${G}.55)" stroke-width="1.6"/>
+      <path d="M600 300 L600 700" stroke="${G}.35)"/>
+      <ellipse cx="600" cy="452" rx="120" ry="52" fill="none" stroke="${G}.45)"/>
+      <path d="M470 300 L730 300 L760 400 L440 400 Z" fill="none" stroke="${G}.4)"/>
+      <path d="M300 700 L900 700" stroke="${G}.3)"/>
+      <rect x="545" y="150" width="110" height="70" rx="3" fill="#0b0b14" stroke="${G}.6)"/>
+      <circle cx="600" cy="232" r="20" fill="none" stroke="${G}.7)" stroke-width="3"/>
+      <line x1="600" y1="150" x2="600" y2="90" stroke="${G}.5)" stroke-width="3"/>
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+
+  const stadium = seed => `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#05050c', '#100c14')}${stars(rnd(seed), 40)}
+      ${[180, 420, 780, 1020].map(x => `<line x1="${x}" y1="60" x2="${x}" y2="240" stroke="${G}.4)" stroke-width="2"/><rect x="${x - 44}" y="30" width="88" height="34" rx="3" fill="${G}.3)" stroke="${G}.6)"/><path d="M${x} 64 L${x - 260} 620 L${x + 260} 620 Z" fill="${G}.045)"/>`).join('')}
+      <ellipse cx="600" cy="520" rx="560" ry="220" fill="none" stroke="${G}.5)" stroke-width="1.6"/>
+      <ellipse cx="600" cy="520" rx="440" ry="168" fill="none" stroke="${G}.3)"/>
+      <ellipse cx="600" cy="520" rx="330" ry="124" fill="#08170e" stroke="${G}.55)"/>
+      <ellipse cx="600" cy="520" rx="70" ry="26" fill="none" stroke="${G}.4)"/>
+      <line x1="600" y1="396" x2="600" y2="644" stroke="${G}.35)"/>
+      <path d="M270 520 a330 124 0 0 1 60 -88" fill="none" stroke="${G}.3)"/>
+      ${Array.from({length: 60}, (_, i) => {const a = i / 60 * Math.PI * 2; return `<circle cx="${(600 + Math.cos(a) * 500).toFixed(0)}" cy="${(520 + Math.sin(a) * 196).toFixed(0)}" r="1.6" fill="${G}.35)"/>`;}).join('')}
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+
+  const track = seed => `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#06060e', '#130d10')}
+      ${Array.from({length: 7}, (_, i) => `<rect x="${180 + i * 22}" y="${250 + i * 20}" width="${840 - i * 44}" height="${380 - i * 40}" rx="${190 - i * 20}" fill="none" stroke="${G}${(.5 - i * .04).toFixed(2)})" stroke-width="1.4"/>`).join('')}
+      <rect x="480" y="242" width="4" height="60" fill="${G}.8)"/>
+      <path d="M420 700 q40 -120 90 -140" fill="none" stroke="${G}.25)"/>
+      <ellipse cx="600" cy="440" rx="180" ry="70" fill="${G}.05)"/>
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+
+  const car = seed => `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#06060e', '#141016')}
+      <ellipse cx="600" cy="600" rx="520" ry="70" fill="${G}.06)"/>
+      <path d="M170 520 L230 430 Q260 392 320 388 L760 372 Q850 370 900 402 L1010 470 Q1046 492 1044 520 L1040 560 L180 566 Z"
+            fill="#0b0b14" stroke="${G}.65)" stroke-width="2"/>
+      <path d="M330 392 L360 300 Q368 276 400 274 L700 264 Q736 262 754 288 L800 372 Z" fill="#0d0d18" stroke="${G}.5)"/>
+      <line x1="520" y1="270" x2="536" y2="378" stroke="${G}.45)"/>
+      <line x1="660" y1="266" x2="682" y2="374" stroke="${G}.45)"/>
+      <path d="M180 500 L1040 486" stroke="${G}.25)"/>
+      <rect x="960" y="452" width="76" height="22" rx="10" fill="${G}.75)"/>
+      <rect x="176" y="486" width="44" height="16" rx="7" fill="${G}.45)"/>
+      <circle cx="380" cy="566" r="86" fill="#06060c" stroke="${G}.7)" stroke-width="3"/>
+      <circle cx="380" cy="566" r="46" fill="none" stroke="${G}.5)" stroke-width="2"/>
+      <circle cx="880" cy="560" r="86" fill="#06060c" stroke="${G}.7)" stroke-width="3"/>
+      <circle cx="880" cy="560" r="46" fill="none" stroke="${G}.5)" stroke-width="2"/>
+      ${Array.from({length: 10}, (_, i) => {const a = i / 10 * Math.PI * 2; return `<line x1="380" y1="566" x2="${(380 + Math.cos(a) * 44).toFixed(0)}" y2="${(566 + Math.sin(a) * 44).toFixed(0)}" stroke="${G}.4)"/><line x1="880" y1="560" x2="${(880 + Math.cos(a) * 44).toFixed(0)}" y2="${(560 + Math.sin(a) * 44).toFixed(0)}" stroke="${G}.4)"/>`;}).join('')}
+      <rect x="0" y="650" width="1200" height="110" fill="#04040a"/>
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+
+  const jet = seed => `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#05050c', '#120e16')}${stars(rnd(seed), 44)}
+      <ellipse cx="600" cy="620" rx="540" ry="60" fill="${G}.05)"/>
+      <path d="M150 520 Q120 500 160 484 L640 452 Q860 440 980 470 Q1060 490 1050 512 L1020 522 L200 536 Z" fill="#0b0b14" stroke="${G}.65)" stroke-width="2"/>
+      <path d="M700 452 L860 320 L910 320 L836 458 Z" fill="#0a0a12" stroke="${G}.55)"/>
+      <path d="M520 500 L400 610 L470 610 L610 512 Z" fill="#0a0a12" stroke="${G}.45)"/>
+      <path d="M760 496 L900 560 L960 548 L850 490 Z" fill="#0a0a12" stroke="${G}.35)"/>
+      ${Array.from({length: 14}, (_, i) => `<rect x="${300 + i * 40}" y="${480 - i * 1.2}" width="14" height="10" rx="4" fill="${G}.55)"/>`).join('')}
+      <path d="M150 500 q-28 6 -26 20 q2 12 30 14" fill="none" stroke="${G}.5)"/>
+      <path d="M330 536 L300 620 L420 620 Z" fill="none" stroke="${G}.5)"/>
+      ${Array.from({length: 5}, (_, i) => `<line x1="${312 + i * 12}" y1="${560 + i * 14}" x2="${372 - i * 6}" y2="${560 + i * 14}" stroke="${G}.45)"/>`).join('')}
+      <rect x="0" y="640" width="1200" height="120" fill="#04040a"/>
+      ${Array.from({length: 12}, (_, i) => `<rect x="${i * 110}" y="690" width="60" height="4" fill="${G}.18)"/>`).join('')}
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+
+  const home = seed => `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#06060e', '#141018')}${stars(rnd(seed), 40)}
+      <circle cx="200" cy="140" r="40" fill="${G}.08)" stroke="${G}.4)"/>
+      <rect x="300" y="250" width="620" height="130" fill="#0b0b14" stroke="${G}.55)"/>
+      <rect x="360" y="380" width="740" height="150" fill="#0a0a12" stroke="${G}.5)"/>
+      <rect x="286" y="238" width="648" height="12" fill="${G}.5)"/>
+      <rect x="346" y="368" width="768" height="12" fill="${G}.45)"/>
+      ${Array.from({length: 7}, (_, i) => `<rect x="${330 + i * 84}" y="266" width="60" height="98" fill="${G}.14)" stroke="${G}.35)"/>`).join('')}
+      ${Array.from({length: 8}, (_, i) => `<rect x="${386 + i * 88}" y="398" width="62" height="116" fill="${G}.10)" stroke="${G}.3)"/>`).join('')}
+      <rect x="120" y="560" width="700" height="150" rx="6" fill="#061019" stroke="${G}.5)"/>
+      ${Array.from({length: 6}, (_, i) => `<path d="M150 ${590 + i * 20} q60 -10 120 0 t120 0 t120 0 t120 0 t120 0" fill="none" stroke="${G}.22)"/>`).join('')}
+      <path d="M980 700 v-120 M980 580 q-40 -50 -70 -60 M980 580 q40 -50 74 -58 M980 620 q-46 -40 -80 -40 M980 620 q46 -40 82 -38" fill="none" stroke="${G}.4)" stroke-width="2"/>
+      <rect x="0" y="700" width="1200" height="60" fill="#04040a"/>
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+
+  const stage = seed => `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#06060e', '#0e0a12')}
+      <path d="M600 0 L340 620 L860 620 Z" fill="${G}.07)"/>
+      <path d="M600 0 L470 620 L730 620 Z" fill="${G}.09)"/>
+      <rect x="200" y="90" width="800" height="300" rx="4" fill="#07070f" stroke="${G}.35)"/>
+      <text x="600" y="270" text-anchor="middle" font-family="Georgia,serif" font-size="86" fill="${G}.28)">FITSOCIAL</text>
+      <ellipse cx="600" cy="622" rx="120" ry="16" fill="${G}.12)"/>
+      <path d="M600 380 a34 34 0 1 1 .1 0 Z" fill="#0d0d17" stroke="${G}.8)" stroke-width="2"/>
+      <path d="M556 448 q44 -30 88 0 q22 70 16 172 h-120 q-6 -102 16 -172 Z" fill="#0d0d17" stroke="${G}.75)" stroke-width="2"/>
+      <path d="M556 470 q-40 60 -34 110" fill="none" stroke="${G}.6)" stroke-width="2"/>
+      <path d="M644 470 q46 40 40 96" fill="none" stroke="${G}.6)" stroke-width="2"/>
+      <circle cx="690" cy="558" r="7" fill="${G}.9)"/>
+      <rect x="0" y="620" width="1200" height="140" fill="#050509"/>
+      ${Array.from({length: 34}, (_, i) => `<circle cx="${20 + i * 36}" cy="${700 + (i % 3) * 18}" r="${16 + (i % 3) * 3}" fill="#0a0a12" stroke="${G}.18)"/>`).join('')}
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+
+  const food = seed => `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#07070f', '#141016')}
+      ${Array.from({length: 5}, (_, i) => `<line x1="${200 + i * 200}" y1="0" x2="${200 + i * 200}" y2="150" stroke="${G}.3)"/><path d="M${160 + i * 200} 150 h80 l-14 34 h-52 z" fill="${G}.22)" stroke="${G}.55)"/><ellipse cx="${200 + i * 200}" cy="188" rx="46" ry="7" fill="${G}.1)"/>`).join('')}
+      <rect x="60" y="430" width="1080" height="26" rx="6" fill="#0c0c15" stroke="${G}.5)"/>
+      <rect x="90" y="456" width="1020" height="120" fill="#08080f" stroke="${G}.25)"/>
+      ${Array.from({length: 5}, (_, i) => `<circle cx="${210 + i * 195}" cy="416" r="38" fill="#0b0b14" stroke="${G}.6)" stroke-width="1.6"/><circle cx="${210 + i * 195}" cy="416" r="24" fill="none" stroke="${G}.35)"/><path d="M${196 + i * 195} 410 q14 -12 28 0" fill="none" stroke="${G}.5)"/>`).join('')}
+      ${Array.from({length: 6}, (_, i) => `<rect x="${140 + i * 180}" y="600" width="70" height="16" rx="6" fill="#0b0b14" stroke="${G}.4)"/><line x1="${150 + i * 180}" y1="616" x2="${150 + i * 180}" y2="700" stroke="${G}.35)"/><line x1="${200 + i * 180}" y1="616" x2="${200 + i * 180}" y2="700" stroke="${G}.35)"/><rect x="${138 + i * 180}" y="540" width="74" height="60" rx="8" fill="none" stroke="${G}.35)"/>`).join('')}
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+
+  const water = seed => `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#06060e', '#0b1018')}
+      <rect x="0" y="60" width="1200" height="240" fill="#06060d"/>
+      ${Array.from({length: 8}, (_, i) => `<line x1="${i * 160}" y1="60" x2="${i * 160}" y2="300" stroke="${G}.2)"/>`).join('')}
+      <rect x="80" y="330" width="1040" height="330" rx="8" fill="#05121c" stroke="${G}.5)" stroke-width="1.6"/>
+      ${Array.from({length: 11}, (_, i) => `<path d="M110 ${370 + i * 26} q70 -12 140 0 t140 0 t140 0 t140 0 t140 0 t140 0" fill="none" stroke="${G}${(.3 - i * .015).toFixed(2)})"/>`).join('')}
+      ${Array.from({length: 5}, (_, i) => `<line x1="${180 + i * 200}" y1="330" x2="${180 + i * 200}" y2="660" stroke="${G}.18)"/>`).join('')}
+      <path d="M240 300 q-16 -50 8 -80 q-20 -40 6 -70" fill="none" stroke="${G}.35)" stroke-width="2"/>
+      <path d="M960 300 q18 -46 -6 -78 q22 -38 -4 -66" fill="none" stroke="${G}.3)" stroke-width="2"/>
+      <rect x="0" y="660" width="1200" height="100" fill="#05050b"/>
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+
+  const sauna = seed => `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#0a0710', '#160d10')}
+      ${Array.from({length: 22}, (_, i) => `<line x1="0" y1="${60 + i * 30}" x2="1200" y2="${60 + i * 30}" stroke="${G}.16)"/>`).join('')}
+      <rect x="150" y="420" width="900" height="26" rx="4" fill="#0d0b12" stroke="${G}.5)"/>
+      <rect x="210" y="540" width="780" height="26" rx="4" fill="#0d0b12" stroke="${G}.45)"/>
+      <rect x="150" y="446" width="900" height="94" fill="${G}.05)"/>
+      <circle cx="600" cy="300" r="70" fill="none" stroke="${G}.5)"/>
+      ${Array.from({length: 9}, (_, i) => `<circle cx="${560 + (i % 3) * 40}" cy="${280 + Math.floor(i / 3) * 30}" r="13" fill="#0e0c14" stroke="${G}.55)"/>`).join('')}
+      ${Array.from({length: 4}, (_, i) => `<path d="M${480 + i * 90} 220 q-18 -44 4 -70 q-20 -36 2 -62" fill="none" stroke="${G}.28)" stroke-width="2"/>`).join('')}
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+
+  const people = (seed, opts = {}) => {
+    const n = opts.n || 5;
+    const r = rnd(seed);
+    let f = '';
+    const heights = [0, -22, 18, -12, 26, -6];
+    for (let i = 0; i < n; i++) {
+      const x = 600 - (n - 1) * 95 / 2 + i * 95, base = 660 + (heights[i % 6] || 0) * .4, h = 200 + (i % 3) * 18;
+      f += `<circle cx="${x}" cy="${base - h - 18}" r="24" fill="#0d0d17" stroke="${G}.75)" stroke-width="2"/>
+        <path d="M${x - 40} ${base} L${x - 40} ${base - h * .55} q0 -${h * .5} 40 -${h * .5} q40 0 40 ${h * .5} L${x + 40} ${base} Z" fill="#0c0c15" stroke="${G}.65)" stroke-width="2"/>
+        <line x1="${x - 40}" y1="${base - h * .34}" x2="${x + 40}" y2="${base - h * .34}" stroke="${G}.25)"/>`;
+    }
+    return `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#06060e', '#151017')}${stars(r, 30)}
+      <circle cx="600" cy="300" r="230" fill="none" stroke="${G}.18)"/>
+      <circle cx="600" cy="300" r="300" fill="none" stroke="${G}.1)"/>
+      ${f}
+      <rect x="0" y="660" width="1200" height="100" fill="#04040a"/>
+      <ellipse cx="600" cy="666" rx="420" ry="18" fill="${G}.08)"/>
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+  };
+
+  const globe = seed => {
+    const r = rnd(seed);
+    let pins = '';
+    for (let i = 0; i < 14; i++) {
+      const a = r() * Math.PI * 2, rad = 60 + r() * 200;
+      const x = 600 + Math.cos(a) * rad, y = 400 + Math.sin(a) * rad * .62;
+      pins += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="4" fill="${G}.9)"/><circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="12" fill="none" stroke="${G}.4)"/>`;
+    }
+    return `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#05050c', '#100d16')}${stars(r, 60)}
+      <circle cx="600" cy="400" r="260" fill="none" stroke="${G}.5)" stroke-width="1.4"/>
+      <circle cx="600" cy="400" r="260" fill="${G}.04)"/>
+      ${Array.from({length: 7}, (_, i) => `<ellipse cx="600" cy="400" rx="${260 - i * 0}" ry="${260 - i * 40}" fill="none" stroke="${G}.16)" transform="rotate(0 600 400)"/>`).join('')}
+      ${Array.from({length: 7}, (_, i) => `<ellipse cx="600" cy="400" rx="${40 + i * 36}" ry="260" fill="none" stroke="${G}.14)"/>`).join('')}
+      ${pins}
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+  };
+
+
+  const lakehouse = seed => `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#06060e', '#0e1016')}${stars(rnd(seed), 40)}
+      <path d="M100 420 L340 420 L340 300 L470 220 L600 300 L600 420 L100 420" fill="none"/>
+      <path d="M330 420 V300 L470 214 L610 300 V420 Z" fill="#0b0b13" stroke="${G}.55)" stroke-width="1.6"/>
+      <path d="M318 306 L470 212 L622 306" fill="none" stroke="${G}.65)" stroke-width="2"/>
+      <rect x="370" y="330" width="52" height="60" fill="${G}.15)" stroke="${G}.4)"/>
+      <rect x="518" y="330" width="52" height="60" fill="${G}.15)" stroke="${G}.4)"/>
+      <rect x="455" y="340" width="34" height="80" fill="${G}.2)" stroke="${G}.45)"/>
+      <path d="M700 420 q40 -60 60 -66 q22 40 8 66 Z" fill="#08080f" stroke="${G}.35)"/>
+      <path d="M780 420 q50 -90 74 -96 q30 56 10 96 Z" fill="#08080f" stroke="${G}.35)"/>
+      <rect x="0" y="420" width="1200" height="340" fill="#05121c"/>
+      ${Array.from({length: 10}, (_, i) => `<path d="M60 ${450 + i * 30} q90 -10 180 0 t180 0 t180 0 t180 0 t180 0 t180 0" fill="none" stroke="${G}${(.26 - i * .02).toFixed(2)})"/>`).join('')}
+      <path d="M330 470 V520 M610 470 V516 M330 470 L610 470 M360 470 V510 M470 470 V514 M540 470 V512" stroke="${G}.3)"/>
+      <rect x="620" y="440" width="120" height="14" rx="3" fill="#0a0a12" stroke="${G}.45)"/>
+      <line x1="640" y1="454" x2="640" y2="500" stroke="${G}.4)"/>
+      <line x1="720" y1="454" x2="720" y2="500" stroke="${G}.4)"/>
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+
+  const supercar = seed => `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#06060e', '#14101a')}
+      <ellipse cx="600" cy="610" rx="540" ry="56" fill="${G}.07)"/>
+      <path d="M150 560 L200 520 Q240 470 340 458 L460 448 Q520 400 610 392 L760 386 Q850 388 910 430 L1000 470 Q1060 492 1058 530 L1050 566 L160 572 Z"
+            fill="#0b0b14" stroke="${G}.7)" stroke-width="2.2"/>
+      <path d="M470 446 Q530 402 615 396 L740 391 Q800 393 830 424 L850 444 Z" fill="#0d0d18" stroke="${G}.5)"/>
+      <line x1="620" y1="394" x2="640" y2="446" stroke="${G}.4)"/>
+      <path d="M905 430 L1010 430 L1000 402 L930 402 Z" fill="#0b0b14" stroke="${G}.55)"/>
+      <path d="M170 540 L1046 528" stroke="${G}.25)"/>
+      <rect x="975" y="488" width="70" height="18" rx="9" fill="${G}.8)"/>
+      <rect x="152" y="524" width="40" height="14" rx="6" fill="${G}.5)"/>
+      <circle cx="360" cy="574" r="78" fill="#06060c" stroke="${G}.75)" stroke-width="3"/>
+      <circle cx="360" cy="574" r="40" fill="none" stroke="${G}.55)" stroke-width="2"/>
+      <circle cx="880" cy="566" r="78" fill="#06060c" stroke="${G}.75)" stroke-width="3"/>
+      <circle cx="880" cy="566" r="40" fill="none" stroke="${G}.55)" stroke-width="2"/>
+      ${Array.from({length: 7}, (_, i) => {const a = i / 7 * Math.PI * 2; return `<line x1="360" y1="574" x2="${(360 + Math.cos(a) * 38).toFixed(0)}" y2="${(574 + Math.sin(a) * 38).toFixed(0)}" stroke="${G}.45)"/><line x1="880" y1="566" x2="${(880 + Math.cos(a) * 38).toFixed(0)}" y2="${(566 + Math.sin(a) * 38).toFixed(0)}" stroke="${G}.45)"/>`;}).join('')}
+      <rect x="0" y="648" width="1200" height="112" fill="#04040a"/>
+      ${Array.from({length: 10}, (_, i) => `<rect x="${i * 130}" y="690" width="72" height="4" fill="${G}.16)"/>`).join('')}
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+
+  const chapel = seed => {
+    const r = rnd(seed);
+    let rays = '';
+    for (let i = 0; i < 7; i++) {
+      const x = 430 + i * 60;
+      rays += `<path d="M600 40 L${x} 560 L${x + 34} 560 Z" fill="${G}${(.05 + (i === 3 ? .05 : 0)).toFixed(2)})"/>`;
+    }
+    let pews = '';
+    for (let i = 0; i < 5; i++) {
+      const y = 560 + i * 36, inset = 90 - i * 14;
+      pews += `<line x1="${180 + inset}" y1="${y}" x2="${520}" y2="${y}" stroke="${G}.3)" stroke-width="3"/>
+               <line x1="680" y1="${y}" x2="${1020 - inset}" y2="${y}" stroke="${G}.3)" stroke-width="3"/>`;
+    }
+    return `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#07060d', '#120e14')}${stars(r, 30)}
+      ${rays}
+      <line x1="600" y1="150" x2="600" y2="400" stroke="${G}.9)" stroke-width="7"/>
+      <line x1="530" y1="225" x2="670" y2="225" stroke="${G}.9)" stroke-width="7"/>
+      <circle cx="600" cy="270" r="150" fill="none" stroke="${G}.25)"/>
+      <circle cx="600" cy="270" r="210" fill="none" stroke="${G}.12)"/>
+      <path d="M320 560 L320 360 Q600 260 880 360 L880 560" fill="none" stroke="${G}.3)"/>
+      ${pews}
+      <rect x="540" y="470" width="120" height="14" rx="3" fill="#0b0b14" stroke="${G}.5)"/>
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+  };
+
+  const island = seed => {
+    const r = rnd(seed);
+    return `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      ${sky(seed, '#06070f', '#101318')}${stars(r, 36)}
+      <circle cx="920" cy="150" r="56" fill="${G}.08)" stroke="${G}.5)"/>
+      <rect x="0" y="430" width="1200" height="330" fill="#05121c"/>
+      ${Array.from({length: 11}, (_, i) => `<path d="M0 ${455 + i * 28} q100 -12 200 0 t200 0 t200 0 t200 0 t200 0 t200 0" fill="none" stroke="${G}${(.26 - i * .018).toFixed(2)})"/>`).join('')}
+      <path d="M140 430 q40 -26 90 -22 q60 2 90 22 Z" fill="#0a0a12" stroke="${G}.4)"/>
+      <path d="M185 410 q-30 -60 -60 -76 M185 410 q-4 -66 -22 -100 M185 410 q26 -60 56 -78 M185 410 q40 -40 76 -46" fill="none" stroke="${G}.5)" stroke-width="2.4"/>
+      <line x1="185" y1="410" x2="185" y2="300" stroke="${G}0)"/>
+      <path d="M182 412 q6 -70 2 -112" fill="none" stroke="${G}.55)" stroke-width="4"/>
+      <rect x="620" y="360" width="150" height="76" fill="#0b0b13" stroke="${G}.55)"/>
+      <path d="M600 362 L695 310 L790 362 Z" fill="#0d0d17" stroke="${G}.6)"/>
+      <rect x="660" y="388" width="34" height="48" fill="${G}.2)" stroke="${G}.4)"/>
+      <line x1="560" y1="436" x2="620" y2="436" stroke="${G}.45)" stroke-width="5"/>
+      <line x1="575" y1="440" x2="575" y2="480" stroke="${G}.35)"/>
+      <line x1="605" y1="440" x2="605" y2="478" stroke="${G}.35)"/>
+      <rect x="790" y="430" width="8" height="46" fill="${G}.35)"/>
+      <rect width="1200" height="760" fill="url(#fade${seed})"/>
+    </svg>`;
+  };
+
+  const map = {skyline, tower, officeInterior, gym, court, stadium, track, car, jet, home, stage, food, water, sauna, people, globe, lakehouse, supercar, chapel, island};
+  return (type, seed, opts) => (map[type] || skyline)(seed || 7, opts || {});
+})();
+
+
+const U = id => "https://images.unsplash.com/photo-" + id + "?auto=format&fit=crop&w=1600&q=75";
+
+const PLATES = {
+  lifeHomes: [
+    {c:'g-6', type:'home', seed:71, t:'The Mansion', s:'Stone, glass, and room for everyone we love', p:'1505843513577-22bb7d21e455'},
+    {c:'g-3', type:'lakehouse', seed:73, t:'The Lakehouse', s:'Still water, loud kids, slow mornings', p:'1621571113981-f51bde2a125b'},
+    {c:'g-3', type:'tower', seed:75, t:'The Penthouse', s:'The whole skyline from the tub', p:'1565623833408-d77e39b88af6'},
+    {c:'g-4', type:'home', seed:77, t:'The Modern Estate', s:'Architecture worth photographing', p:'1600596542815-ffad4c1539a9'},
+    {c:'g-4', type:'home', seed:79, t:'The Courtyard', s:'Water, palms, and evening light', p:'1613490493576-7fde63acd811'},
+    {c:'g-4', type:'officeInterior', seed:81, t:'The Great Room', s:'Twenty for dinner, easily', p:'1503174971373-b1f69850bded'}
+  ],
+  lifeCars: [
+    {c:'g-6', type:'supercar', seed:83, t:'The Bugatti', s:'Because it exists and so do I', p:'1600712242805-5f78671b24da'},
+    {c:'g-3', type:'supercar', seed:85, t:'The Ferrari', s:'Rosso corsa, obviously', p:'1583121274602-3e2820c69888'},
+    {c:'g-3', type:'supercar', seed:87, t:'The Porsche', s:'911 — the daily', p:'1614162692292-7ac56d7f7f1e'},
+    {c:'g-4', type:'car', seed:89, t:'The Tesla', s:'Silent money', p:'1536700503339-1e4b06520771'},
+    {c:'g-4', type:'car', seed:91, t:'The Rolls', s:'Starlight roof for Lajoie', p:'1696233016084-30c8345d85ff'},
+    {c:'g-4', type:'car', seed:93, t:'The G-Wagon', s:'Saturday errands', p:'1648413653877-ade5eefd2f1b'}
+  ],
+  lifeTravel: [
+    {c:'g-6', type:'island', seed:95, t:'Santorini', s:'Anniversary, year one of many', p:'1570077188670-e3a8d69ac5ff'},
+    {c:'g-3', type:'island', seed:97, t:'The Islands', s:'Blue water, no schedule', p:'1533105079780-92b9be482077'},
+    {c:'g-3', type:'jet', seed:99, t:'Wheels Up', s:'The world is the office', p:'1474302770737-173ee21bab63'},
+    {c:'g-4', type:'skyline', seed:101, t:'Dubai', s:'Winter offices', p:'1512453979798-5ea266f8880c'},
+    {c:'g-4', type:'water', seed:103, t:'The Yacht Week', s:'Family reunion, on the water', p:'1680831748191-d726a2f7b201'},
+    {c:'g-4', type:'skyline', seed:105, t:'Everywhere', s:'Stamps in every passport', p:'1488646953014-85cb44e25828'}
+  ],
+  lifeFaith: [
+    {c:'g-6', type:'chapel', seed:107, t:'God First', s:'The source of every line on this page', p:'1438232992991-995b7058bbb3'},
+    {c:'g-3', type:'chapel', seed:109, t:'Worship', s:'Hands up before the breakthrough, not after', p:'1508829040592-72f179f8a73f'},
+    {c:'g-3', type:'chapel', seed:111, t:'The Quiet Time', s:'5am, before the phone', p:'1477281765962-ef34e8bb0967'}
+  ],
+  mission: [
+    {c:'s-12', type:'globe', seed:17, t:'Every continent we can reach', s:'One app · one mission · millions of lives', p:'1451187580459-43490279c0fa'}
+  ],
+  houses: [
+    {c:'s-8', type:'skyline', seed:11, t:'Global Headquarters', s:'New York City', p:'1499092346589-b9b6be3e94b2'},
+    {c:'s-4', type:'tower', seed:5, t:'The Cincinnati House', s:'Where it started', p:'1583009640887-eafd1a994d30'},
+    {c:'s-4', type:'skyline', seed:23, t:'FitSocial Europe', s:'London', p:'1513635269975-59663e0ac1ad'},
+    {c:'s-4', type:'skyline', seed:31, t:'FitSocial Africa', s:'Lagos', p:'1649502913092-fb7f0e8fc632'},
+    {c:'s-4', type:'skyline', seed:43, t:'FitSocial Asia-Pacific', s:'Tokyo · Singapore', p:'1513407030348-c983a97b98d8'}
+  ],
+  grounds: [
+    {c:'s-12', type:'gym', seed:3, t:'The FitSocial Club — Flagship', s:'Fitness · sport · medicine · food · community', p:'1534438327276-14e5300c3a48'},
+    {c:'s-6', type:'court', seed:4, t:'The Fields', s:'Where people play again', p:'1572454181157-0b40dd7667fe'},
+    {c:'s-6', type:'water', seed:6, t:'Recovery &amp; Water', s:'Doctors, nurses, sauna, plunge', p:'1488345979593-09db0f85545f'}
+  ],
+  people: [
+    {c:'s-12', type:'officeInterior', seed:9, t:'The Floor', s:'Paid well · treated right · proud to be here', p:'1764702425214-a68f9a83a549'}
+  ],
+  man: [
+    {c:'s-12', type:'stage', seed:2, t:'The Stage', s:'Rooms lean in', p:'1587825140708-dfaf72ae4b04'}
+  ],
+  house: [
+    {c:'s-6', type:'home', seed:18, t:'The Family Home', s:'Peace, beauty, and a full table', p:'1613490493576-7fde63acd811'},
+    {c:'s-6', type:'car', seed:15, t:'The Garage', s:'Earned, not financed', p:'1648413653877-ade5eefd2f1b'}
+  ],
+  gallery: [
+    {c:'g-6', type:'skyline', seed:11, t:'Global Headquarters', s:'New York City', p:'1514565131-fce0801e5785'},
+    {c:'g-3', type:'tower', seed:5,  t:'The Tower', s:'Dubai', p:'1512453979798-5ea266f8880c'},
+    {c:'g-3', type:'officeInterior', seed:9, t:'The Penthouse Office', s:'Top floor · glass on three sides', p:'1764702425214-a68f9a83a549'},
+    {c:'g-3', type:'skyline', seed:23, t:'FitSocial London', s:'Europe', p:'1543832923-44667a44c804'},
+    {c:'g-3', type:'skyline', seed:31, t:'FitSocial Lagos', s:'Africa', p:'1569706971306-de5d78f6418e'},
+    {c:'g-3', type:'skyline', seed:43, t:'FitSocial Tokyo', s:'Asia-Pacific', p:'1606044466411-207a9a49711f'},
+    {c:'g-3', type:'globe', seed:17, t:'The Reach', s:'Offices on every continent', p:'1451187580459-43490279c0fa'},
+    {c:'g-6', type:'gym', seed:3, t:'The Flagship Club', s:'The greatest gym in the world — open to everybody', p:'1534438327276-14e5300c3a48'},
+    {c:'g-3', type:'gym', seed:21, t:'The Weight Floor', s:'Where the work happens', p:'1571902943202-507ec2618e8f'},
+    {c:'g-3', type:'gym', seed:35, t:'The Studio', s:'Elite coaching, every hour', p:'1723117417879-2effcca63cda'},
+    {c:'g-4', type:'court', seed:4, t:'The Court', s:'Grown men play again', p:'1549081231-203e069916f0'},
+    {c:'g-4', type:'stadium', seed:8, t:'The Arena', s:'League partnerships', p:'1626003573503-2e088d82c647'},
+    {c:'g-4', type:'track', seed:12, t:'The Track', s:'Lane one is always open', p:'1612626360035-324ebf7d27f1'},
+    {c:'g-3', type:'sauna', seed:6, t:'The Recovery Wing', s:'Sauna · plunge · therapy', p:'1583416750470-965b2707b355'},
+    {c:'g-3', type:'water', seed:19, t:'The Infinity Pool', s:'Rooftop, 40 floors up', p:'1488345979593-09db0f85545f'},
+    {c:'g-3', type:'food', seed:13, t:'The Food Hall', s:'Eating well made easy', p:'1679548651523-741d00da5ece'},
+    {c:'g-3', type:'officeInterior', seed:27, t:'The Lobby', s:'Stone, light, and silence', p:'1625244724120-1fd1d34d00f6'},
+    {c:'g-6', type:'officeInterior', seed:14, t:'The Boardroom', s:'Where the next decade gets decided', p:'1517048676732-d65bc937f952'},
+    {c:'g-6', type:'stage', seed:2, t:'The Stage', s:'They came to hear the vision', p:'1559223694-98ed5e272fef'},
+    {c:'g-4', type:'car', seed:15, t:'The Rolls', s:'Earned, not financed', p:'1696233016084-30c8345d85ff'},
+    {c:'g-4', type:'car', seed:39, t:'The G-Wagon', s:'Saturday morning', p:'1648413653877-ade5eefd2f1b'},
+    {c:'g-4', type:'jet', seed:25, t:'Wheels Up', s:'Five cities this week', p:'1474302770737-173ee21bab63'},
+    {c:'g-4', type:'jet', seed:45, t:'The Cabin', s:'Office at 40,000 feet', p:'1625513123245-fcb02d69ad12'},
+    {c:'g-4', type:'skyline', seed:51, t:'The Helipad', s:'Downtown in nine minutes', p:'1504326008149-71dbc00aa3ae'},
+    {c:'g-4', type:'water', seed:57, t:'The Water', s:'Rest is part of the plan', p:'1680831748191-d726a2f7b201'},
+    {c:'g-6', type:'home', seed:18, t:'The Estate', s:'Where I always come back to', p:'1613490493576-7fde63acd811'},
+    {c:'g-3', type:'home', seed:63, t:'The Penthouse', s:'City lights from the couch', p:'1694057545160-e4b0deffe34a'},
+    {c:'g-3', type:'officeInterior', seed:67, t:'The Collection', s:'Art on the walls, ours', p:'1641565487012-7a653144e932'},
+    {c:'g-6', type:'people', seed:33, n:6, t:'The Team', s:'A dream company to work for', p:''},
+    {c:'g-6', type:'people', seed:41, n:4, t:'The Oyadirans', s:'Seye · Lajoie · and the ones coming', p:''}
+  ]
+};
+
+/* ---------- build plates ---------- */
+const ALL = [];
+let FAILED = 0, noticeShown = false;
+function flagNotice(){
+  if (noticeShown || FAILED < 3) return;
+  noticeShown = true;
+  document.getElementById('notice').classList.add('on');
+}
+function buildPlate(d){
+  const el = document.createElement('div');
+  el.className = 'plate ' + d.c;
+  el.innerHTML =
+    '<div class="art">' + ART(d.type, d.seed, {n: d.n}) + '</div>' +
+    (d.p ? '<img class="ph" loading="lazy" alt="" src="' + U(d.p) + '">' : '') +
+    '<div class="scrim"></div><div class="frame"></div>' +
+    '<div class="up" title="Add your own photo">＋</div>' +
+    '<div class="cap"><div class="t">' + d.t + '</div><div class="s">' + d.s + '</div></div>';
+  const img = el.querySelector('.ph');
+  if (img){
+    img.addEventListener('load', () => img.classList.add('on'));
+    img.addEventListener('error', () => { img.style.display = 'none'; FAILED++; flagNotice(); });
+    if (img.complete && img.naturalWidth) img.classList.add('on');
+  }
+  d.el = el; ALL.push(d);
+  return el;
+}
+Object.entries(PLATES).forEach(([key, list]) => {
+  const host = document.querySelector('[data-plates="' + key + '"]');
+  if (!host) return;
+  list.forEach(d => host.appendChild(buildPlate(d)));
+});
+
+/* hero backdrop */
+(() => {
+  const bg = document.getElementById('heroBg');
+  bg.innerHTML = ART('skyline', 11, {}) + '<img alt="" src="' + U('1499092346589-b9b6be3e94b2') + '">';
+  const im = bg.querySelector('img');
+  im.addEventListener('load', () => im.classList.add('on'));
+  im.addEventListener('error', () => { im.style.display='none'; });
+})();
+
+/* ---------- upload ---------- */
+const picker = document.getElementById('picker');
+let target = null;
+document.addEventListener('click', e => {
+  const up = e.target.closest('.up');
+  if (!up) return;
+  e.stopPropagation();
+  target = up.closest('.plate');
+  picker.value = ''; picker.click();
+});
+picker.addEventListener('change', () => {
+  const f = picker.files && picker.files[0];
+  if (!f || !target) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    let img = target.querySelector('.ph');
+    if (!img){ img = document.createElement('img'); img.className = 'ph'; target.insertBefore(img, target.querySelector('.scrim')); }
+    img.src = ev.target.result; img.classList.add('on');
+    const rec = ALL.find(a => a.el === target); if (rec) rec.custom = ev.target.result;
+    target = null;
+  };
+  r.readAsDataURL(f);
+});
+
+/* ---------- lightbox ---------- */
+const lb = document.getElementById('lb'), lbStage = document.getElementById('lbStage');
+let idx = 0;
+function openLb(i){
+  idx = (i + ALL.length) % ALL.length;
+  const d = ALL[idx];
+  const src = d.custom || (d.p ? U(d.p) : null);
+  lbStage.innerHTML = '<div class="art">' + ART(d.type, d.seed, {n: d.n}) + '</div>' +
+    (src ? '<img alt="" src="' + src + '">' : '') +
+    '<div class="meta"><div class="t">' + d.t + '</div><div class="s">' + d.s + '</div></div>';
+  const im = lbStage.querySelector('img');
+  if (im) im.addEventListener('error', () => im.remove());
+  lb.classList.add('on');
+}
+document.addEventListener('click', e => {
+  const pl = e.target.closest('.plate');
+  if (!pl) return;
+  openLb(ALL.findIndex(a => a.el === pl));
+});
+document.getElementById('lbClose').onclick = () => lb.classList.remove('on');
+document.getElementById('lbPrev').onclick = e => { e.stopPropagation(); openLb(idx - 1); };
+document.getElementById('lbNext').onclick = e => { e.stopPropagation(); openLb(idx + 1); };
+lb.addEventListener('click', e => { if (e.target === lb) lb.classList.remove('on'); });
+document.addEventListener('keydown', e => {
+  if (!lb.classList.contains('on')) return;
+  if (e.key === 'Escape') lb.classList.remove('on');
+  if (e.key === 'ArrowLeft') openLb(idx - 1);
+  if (e.key === 'ArrowRight') openLb(idx + 1);
+});
+
+/* ---------- bake photos into the file ---------- */
+document.getElementById('noticeX').onclick = () => document.getElementById('notice').classList.remove('on');
+
+const bakeBtn = document.getElementById('bakeBtn'), bakeMsg = document.getElementById('bakeMsg');
+bakeBtn.onclick = async () => {
+  const imgs = [...document.querySelectorAll('img')].filter(i => /^https?:/.test(i.src));
+  const urls = [...new Set(imgs.map(i => i.src))];
+  if (!urls.length){ bakeMsg.textContent = 'Every image is already embedded — this file is self-contained.'; return; }
+  bakeBtn.disabled = true;
+  const map = {}; let done = 0, ok = 0;
+  await Promise.all(urls.map(async u => {
+    try {
+      const res = await fetch(u, {mode:'cors'});
+      const blob = await res.blob();
+      map[u] = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(blob); });
+      ok++;
+    } catch(e){ /* leave as remote url */ }
+    done++;
+    bakeMsg.textContent = 'Downloading photography… ' + done + ' of ' + urls.length;
+  }));
+  if (!ok){
+    bakeMsg.innerHTML = 'This viewer is blocking the photo downloads. Save this file to your computer, open it in Chrome or Safari, and press the button again.';
+    bakeBtn.disabled = false; return;
+  }
+  imgs.forEach(i => { if (map[i.src]) { i.setAttribute('src', map[i.src]); i.style.display = ''; } });
+  document.querySelectorAll('img').forEach(i => { if (map[i.src]) i.setAttribute('src', map[i.src]); });
+  const clone = document.documentElement.cloneNode(true);
+  clone.querySelectorAll('#notice,#lb').forEach(n => n.classList.remove('on'));
+  const out = '<!DOCTYPE html>\n' + clone.outerHTML;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([out], {type:'text/html'}));
+  a.download = 'fitsocial-declaration-with-photos.html';
+  a.click();
+  bakeMsg.textContent = ok + ' of ' + urls.length + ' photos baked in. The downloaded file is fully self-contained — it works offline, forever.';
+  bakeBtn.disabled = false;
+};
+
+/* ---------- scroll ---------- */
+const bar = document.getElementById('bar');
+const onScroll = () => {
+  const h = document.documentElement;
+  bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight || 1) * 100) + '%';
+};
+document.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold:.12});
+document.querySelectorAll('ol.decl li, .reveal').forEach((el, i) => { el.style.transitionDelay = ((i % 6) * 70) + 'ms'; io.observe(el); });
+
+/* ---------- tabs ---------- */
+const VIEWS = {decl: document.getElementById('view-decl'), life: document.getElementById('view-life')};
+document.querySelectorAll('#tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#tabs button').forEach(b => b.classList.remove('act'));
+    btn.classList.add('act');
+    const v = btn.dataset.view;
+    VIEWS.decl.hidden = v !== 'decl';
+    VIEWS.life.hidden = v !== 'life';
+    const heroH = document.querySelector('header.hero').offsetHeight;
+    window.scrollTo({top: v === 'life' ? heroH - 60 : 0, behavior: 'auto'});
+    onScroll();
+  });
+});
+</script>
+</body>
+</html>

@@ -6,7 +6,66 @@
       <h2>Dashboard</h2>
       <a href="/admin/add-post" class="btn-add">+ Add New</a>
     </div>
-  
+
+    <!-- FitSocial Declaration -->
+    <a href="/declaration" target="_blank" rel="noopener" class="declaration-banner">
+      <div class="declaration-banner__text">
+        <span class="declaration-banner__eyebrow">Vision</span>
+        <h3>The FitSocial Declaration</h3>
+        <p>Your living vision page &mdash; written in faith, before the evidence.</p>
+      </div>
+      <span class="declaration-banner__cta">Open&nbsp;&rarr;</span>
+    </a>
+
+    <style>
+      .declaration-banner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin: 18px 0 26px;
+        padding: 20px 24px;
+        border: 1px solid rgba(217, 180, 90, 0.45);
+        border-radius: 12px;
+        background: linear-gradient(120deg, rgba(217,180,90,0.14), rgba(217,180,90,0.03));
+        color: #f4f0e6;
+        text-decoration: none;
+        transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+      }
+      .declaration-banner:hover {
+        border-color: rgba(217, 180, 90, 0.9);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      }
+      .declaration-banner__eyebrow {
+        display: inline-block;
+        font-size: 0.7rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #d9b45a;
+        margin-bottom: 6px;
+      }
+      .declaration-banner__text h3 {
+        margin: 0 0 4px;
+        font-size: 1.35rem;
+        color: #f6e3a8;
+      }
+      .declaration-banner__text p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: rgba(244, 240, 230, 0.75);
+      }
+      .declaration-banner__cta {
+        flex-shrink: 0;
+        font-weight: 600;
+        color: #d9b45a;
+        white-space: nowrap;
+      }
+      @media (max-width: 560px) {
+        .declaration-banner { flex-direction: column; align-items: flex-start; }
+      }
+    </style>
+
     <!-- Tab Navigation -->
     <div class="tab-nav">
       <div id="analyticsTabBtn" class="tab-btn active" onclick="showTab('analytics')">Analytics</div>
