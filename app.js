@@ -14,21 +14,16 @@ const mainRoutes = require('./server/routes/main');
 const app = express();
 
 // ======= DATABASE CONNECTION =======
-let dbConnected = false;
-
-connectDB()
-  .then(() => {
-    dbConnected = true;
-    console.log('✅ Database connection established');
-  })
-  .catch((error) => {
+// Await the (cached) connection on every request — on serverless the
+// first request often arrives before a fire-and-forget connect resolves.
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    req.dbConnected = true;
+  } catch (error) {
     console.error('❌ Database connection failed:', error.message);
-    dbConnected = false;
-  });
-
-// ======= DATABASE STATUS MIDDLEWARE =======
-app.use((req, res, next) => {
-  req.dbConnected = dbConnected;
+    req.dbConnected = false;
+  }
   next();
 });
 
@@ -75,10 +70,10 @@ app.use('/admin', adminRoutes);
 
 // ======= HEALTH CHECK =======
 app.get('/health', (req, res) => {
-  const status = dbConnected ? 'OK' : 'Database Disconnected';
-  res.status(dbConnected ? 200 : 503).json({ 
-    status, 
-    database: dbConnected ? 'connected' : 'disconnected',
+  const status = req.dbConnected ? 'OK' : 'Database Disconnected';
+  res.status(req.dbConnected ? 200 : 503).json({
+    status,
+    database: req.dbConnected ? 'connected' : 'disconnected',
     timestamp: new Date().toISOString()
   });
 });
@@ -87,7 +82,7 @@ app.get('/health', (req, res) => {
 app.get('/db-status', (req, res) => {
   res.render('db-status', {
     title: 'Database Status',
-    dbConnected: dbConnected,
+    dbConnected: req.dbConnected,
     currentRoute: '/db-status'
   });
 });

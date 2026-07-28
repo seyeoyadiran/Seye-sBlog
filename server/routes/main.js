@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
 const SiteVisit = require('../models/Sitevisit');
+const mediaStore = require('../helpers/mediaStore');
 
 // Helper function to track site visits
 async function trackSiteVisit() {
@@ -29,6 +30,20 @@ function checkDBConnection(req, res) {
     }
     return true;
 }
+
+/*
+Get
+/media/:id — serve uploaded media stored in MongoDB (GridFS)
+*/
+router.get('/media/:id', async (req, res) => {
+    try {
+        if (!req.dbConnected) return res.status(503).send('Database service unavailable');
+        await mediaStore.sendFile(req.params.id, res);
+    } catch (err) {
+        console.error('Media fetch failed:', err.message);
+        res.status(404).send('Media not found');
+    }
+});
 
 /*
 Get

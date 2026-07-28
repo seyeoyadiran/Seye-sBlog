@@ -8,6 +8,7 @@ const multer = require('multer');
 const path = require('path');
 const SiteVisit = require('../models/Sitevisit');
 const fs = require('fs');
+const mediaStore = require('../helpers/mediaStore');
 
 const adminLayout = '../views/layouts/admin';
 const loginLayout = '../views/layouts/login';
@@ -16,15 +17,9 @@ const jwtSecret = process.env.JWT_SECRET;
 // =======================
 // Multer Configuration
 // =======================
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/uploads/');
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
-});
+// Files are held in memory then written to MongoDB (GridFS) —
+// local disk is not persistent on serverless hosts like Vercel
+const storage = multer.memoryStorage();
 
 const upload = multer({
     storage: storage,
@@ -210,10 +205,10 @@ router.post('/add-post', authMiddleware, upload.array('featuredMedia', 10), asyn
         // Check database connection
         if (!checkDBConnection(req, res)) return;
 
-        const mediaFiles = req.files.map(file => ({
-            url: '/uploads/' + file.filename,
+        const mediaFiles = await Promise.all(req.files.map(async file => ({
+            url: '/media/' + await mediaStore.saveFile(file),
             type: file.mimetype.startsWith('image/') ? 'image' : 'video'
-        }));
+        })));
 
         await Post.create({ 
             title: req.body.title,
@@ -286,8 +281,14 @@ router.put('/edit-post/:id', authMiddleware, upload.array('featuredMedia', 10), 
             const indexesToRemove = req.body.removeMediaIndexes.split(',').map(i => parseInt(i));
             post.media = post.media.filter((m, idx) => {
                 if (indexesToRemove.includes(idx)) {
-                    const oldPath = path.join(__dirname, '..', 'public', m.url);
-                    fs.unlink(oldPath, err => { if (err) console.error('Failed to delete media:', err); });
+                    const mediaId = mediaStore.idFromUrl(m.url);
+                    if (mediaId) {
+                        mediaStore.deleteFile(mediaId);
+                    } else {
+                        // Legacy disk-stored media
+                        const oldPath = path.join(__dirname, '..', '..', 'public', m.url);
+                        fs.unlink(oldPath, err => { if (err) console.error('Failed to delete media:', err); });
+                    }
                     return false; // remove from array
                 }
                 return true; // keep in array
@@ -296,10 +297,10 @@ router.put('/edit-post/:id', authMiddleware, upload.array('featuredMedia', 10), 
 
         // Append new media
         if (req.files && req.files.length > 0) {
-            const newMedia = req.files.map(file => ({
-                url: '/uploads/' + file.filename,
+            const newMedia = await Promise.all(req.files.map(async file => ({
+                url: '/media/' + await mediaStore.saveFile(file),
                 type: file.mimetype.startsWith('image/') ? 'image' : 'video'
-            }));
+            })));
             post.media = [...post.media, ...newMedia];
         }
 
@@ -335,8 +336,14 @@ router.delete('/delete-post/:id', authMiddleware, async (req, res) => {
 
         if (post.media) {
             post.media.forEach(m => {
-                const mediaPath = path.join(__dirname, '..', 'public', m.url);
-                fs.unlink(mediaPath, err => { if (err) console.error('Failed to delete media:', err); });
+                const mediaId = mediaStore.idFromUrl(m.url);
+                if (mediaId) {
+                    mediaStore.deleteFile(mediaId);
+                } else {
+                    // Legacy disk-stored media
+                    const mediaPath = path.join(__dirname, '..', '..', 'public', m.url);
+                    fs.unlink(mediaPath, err => { if (err) console.error('Failed to delete media:', err); });
+                }
             });
         }
 
