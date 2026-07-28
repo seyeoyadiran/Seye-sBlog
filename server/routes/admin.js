@@ -9,6 +9,7 @@ const path = require('path');
 const SiteVisit = require('../models/Sitevisit');
 const fs = require('fs');
 const mediaStore = require('../helpers/mediaStore');
+const declarationHtml = require('../content/declaration.json').html;
 
 const adminLayout = '../views/layouts/admin';
 const loginLayout = '../views/layouts/login';
@@ -436,6 +437,21 @@ router.get("/api/top-posts", authMiddleware, async (req, res) => {
         
         res.status(500).json({ error: "Failed to fetch top posts" });
     }
+});
+
+// =======================
+// FitSocial Declaration (admin-only)
+// =======================
+// The self-contained vision page lives in server/content/declaration.json
+// (kept out of /public so it is never served without a login). Edit that
+// content over time to add to the declaration.
+router.get('/declaration', authMiddleware, (req, res) => {
+    const backLink = '<a href="/admin/dashboard" style="position:fixed;top:16px;left:16px;z-index:9999;'
+        + "font-family:ui-sans-serif,-apple-system,'Segoe UI',Inter,Helvetica,Arial,sans-serif;"
+        + 'font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#d9b45a;text-decoration:none;'
+        + 'padding:8px 14px;border:1px solid rgba(217,180,90,.55);border-radius:999px;'
+        + 'background:rgba(8,7,4,.75);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)">&larr;&nbsp;Admin</a>';
+    res.type('html').send(declarationHtml.replace('</body>', backLink + '</body>'));
 });
 
 // =======================

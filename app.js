@@ -87,12 +87,6 @@ app.get('/db-status', (req, res) => {
   });
 });
 
-// ======= FITSOCIAL DECLARATION =======
-// Clean URL for the self-contained vision page bundled in /public.
-app.get('/declaration', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'fitsocial-declaration.html'));
-});
-
 // ======= 404 HANDLER =======
 app.use((req, res) => {
   res.status(404).render('404', { 
